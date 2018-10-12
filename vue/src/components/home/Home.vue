@@ -1,15 +1,20 @@
 <template>
     <div>
-      <header class="title">首页</header>
+      <header-view title="首页">
+        <!--<template slot="left">返回</template>-->
+        <!--<template slot="right">新增</template>-->
+      </header-view>
       <div class="home">
-        <div class="item"><el-button type="success" @click="onAddCustom">我是店主</el-button></div>
-        <div class="item"><el-button type="success" @click="onAddEmploy">我是店员</el-button></div>
+        <div class="item"><el-button type="success" @click="onToAddShop">我是店主</el-button></div>
+        <div class="item"><el-button type="success" @click="onToRelateShop">我是店员</el-button></div>
       </div>
     </div>
 </template>
 
 <script>
+  import HeaderView from '@/components/cmp/HeaderView.vue'
   export default {
+    components: {HeaderView},
     mounted: function() {
       this.checkPermission = Boolean(this.$route.query.permission)
       this.employName = this.$route.query.name
@@ -21,20 +26,17 @@
       }
     },
     methods: {
-      onToAuth: function () {
-        this.$router.push('/permit')
+      /**
+       * 新增门店
+       */
+      onToAddShop: function () {
+        this.$router.push('/shopAdd')
       },
-      onToCheck: function() {
-        this.$router.push('/search')
-      },
-      onAddCustom: function () {
-        this.$router.push({name: 'addCustom', query: {type: 'add'}})
-      },
-      onAddEmploy: function () {
-        this.$router.push({name: 'addEmploy', query: {type: 'add'}})
-      },
-      onToGroupChat: function () {
-        this.$router.push('/groupChat')
+      /**
+       * 关联门店
+       */
+      onToRelateShop: function() {
+        this.$router.push('/relatedShop')
       }
     }
   }

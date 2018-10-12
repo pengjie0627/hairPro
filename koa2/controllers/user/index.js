@@ -24,7 +24,7 @@ var fn_login = async(ctx, next) => {
     if (employTable.length === 0) {// 表不存在
         console.log('员工表不存在,正在创建')
         await db.createTable(require('../../mysql/table').employ)
-        // await db.add(`insert into employ(name,mobile,dateTime,password,remark,auth,checked) values('admin','13838543062','2018-09-30','admin','店长账号','1','1')`)
+        // await db.add(`insert into employ(name,mobile,dateTime,password,remark,auth,checked) values('user','13838543062','2018-09-30','user','店长账号','1','1')`)
         console.log('店长账号创建成功')
     } else { // 表存在
         console.log('员工表存在')
@@ -94,7 +94,7 @@ var fn_register = async(ctx, next) => {
     if (employTable.length === 0) {// 表不存在
         console.log('员工表不存在,正在创建')
         await db.createTable(require('../../mysql/table').employ)
-        // await db.add(`insert into employ(name,mobile,dateTime,password,remark,auth,checked) values('admin','13838543062','2018-09-30','admin','店长账号','1','1')`)
+        // await db.add(`insert into employ(name,mobile,dateTime,password,remark,auth,checked) values('user','13838543062','2018-09-30','user','店长账号','1','1')`)
         console.log('店长账号创建成功')
     } else { // 表存在
         console.log('员工表存在')
@@ -127,7 +127,31 @@ var fn_register = async(ctx, next) => {
         ctx.response.body = response
     }
 };
-
+var fn_shopImg = async (ctx,next) => {
+    console.log(ctx.session.userinfo)
+    // 创建可读流
+    const reader = fs.createReadStream(ctx.request.files.file.path);
+    let filePath = ''
+    let fileStamp = ''
+    if (ctx.request.files.file.type.indexOf('jpeg') > 0 || ctx.request.files.file.type.indexOf('JPEG') > 0) {
+        fileStamp = new Date().getTime() + '.jpg'
+        filePath = path.join(__dirname, 'public/') + fileStamp;
+    } else {
+        fileStamp = new Date().getTime() + '.png'
+        filePath = path.join(__dirname, 'public/') + fileStamp;
+    }
+    // 创建可写流
+    const upStream = fs.createWriteStream(filePath);
+    // 可读流通过管道写入可写流
+    reader.pipe(upStream);
+    var imgUrl = `${ctx.request.header.origin.substring(0,7)}${ctx.request.header.host}/${fileStamp}`
+    const response = require('../../dao/baseResponse')
+    response.data = imgUrl
+    response.success = true
+    response.status = 200
+    response.total = 0
+    ctx.response.body = response
+}
 /**
  * 检查表存在
  */
@@ -154,7 +178,7 @@ var fn_register = async(ctx, next) => {
 //         if (employTable.length === 0) {// 表不存在
 //             console.log('员工表不存在,正在创建')
 //             db.createTable(require('../../mysql/table').employ)
-//             // await db.add(`insert into employ(name,mobile,dateTime,password,remark,auth,checked) values('admin','13838543062','2018-09-30','admin','店长账号','1','1')`)
+//             // await db.add(`insert into employ(name,mobile,dateTime,password,remark,auth,checked) values('user','13838543062','2018-09-30','user','店长账号','1','1')`)
 //             console.log('店长账号创建成功')
 //         } else { // 表存在
 //             console.log('员工表存在')
@@ -173,5 +197,6 @@ var fn_register = async(ctx, next) => {
 // }
 module.exports = {
     'GET /login': fn_login,
-    'GET /register': fn_register
+    'GET /register': fn_register,
+    'POST /shopImg': fn_shopImg
 };
