@@ -1,4 +1,4 @@
 var database = {
-    wdjuser: `CREATE DATABASE wdjuser`
+    allHair: `CREATE DATABASE allHair`
 }
 module.exports = database

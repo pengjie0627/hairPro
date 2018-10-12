@@ -1,12 +1,9 @@
 <template>
     <div>
-      <header class="title">城城美业</header>
+      <header class="title">首页</header>
       <div class="home">
-        <div class="item"><el-button type="success" @click="onAddCustom">新增客户信息</el-button></div>
-        <div class="item"><el-button v-if="employName === 'admin'" type="success" @click="onAddEmploy">新增员工信息</el-button></div>
-        <div class="item"> <el-button v-if="employName === 'admin'" type="success" @click="onToAuth">管理员工权限</el-button></div>
-        <div class="item"><el-button v-if="checkPermission" type="success" @click="onToCheck">客户信息查询</el-button></div>
-        <div class="item"><el-button type="success" @click="onToGroupChat">去和员工群聊</el-button></div>
+        <div class="item"><el-button type="success" @click="onAddCustom">我是店主</el-button></div>
+        <div class="item"><el-button type="success" @click="onAddEmploy">我是店员</el-button></div>
       </div>
     </div>
 </template>

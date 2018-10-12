@@ -3,7 +3,7 @@ var config = {
     password: 'root',
     host: 'localhost',
     port: '3306',
-    database: 'wdjuser',
+    database: 'allHair',
     insecureAuth : true
 };
 module.exports = config;
