@@ -1,5 +1,7 @@
 const db = require('../../mysql/utils');
 const database = require('../../mysql/database.js')
+const fs = require('fs')
+const path = require('path');
 var fn_login = async(ctx, next) => {
     // 获取账号信息
     let loginName = ctx.request.query.userName
@@ -133,17 +135,30 @@ var fn_shopImg = async (ctx,next) => {
     const reader = fs.createReadStream(ctx.request.files.file.path);
     let filePath = ''
     let fileStamp = ''
+    let dir = ''
+    if (ctx.request.url.indexOf('/user') >= 0) {
+        dir = path.join(__dirname, '../../img/userImg/')
+    } else if (ctx.request.url.indexOf('/employ') >= 0) {
+        dir = path.join(__dirname, '../../img/employImg/')
+    } else if (ctx.request.url.indexOf('/custom') >= 0) {
+        dir = path.join(__dirname, '../../img/customerImg/')
+    } else if (ctx.request.url.indexOf('/subAdmin') >= 0) {
+        dir = path.join(__dirname, '../../img/subAdminImg/')
+    } else {
+        dir = path.join(__dirname, '../../img/otherImg/')
+    }
     if (ctx.request.files.file.type.indexOf('jpeg') > 0 || ctx.request.files.file.type.indexOf('JPEG') > 0) {
         fileStamp = new Date().getTime() + '.jpg'
-        filePath = path.join(__dirname, 'public/') + fileStamp;
+        filePath = dir + fileStamp;
     } else {
         fileStamp = new Date().getTime() + '.png'
-        filePath = path.join(__dirname, 'public/') + fileStamp;
+        filePath = dir + fileStamp;
     }
     // 创建可写流
     const upStream = fs.createWriteStream(filePath);
     // 可读流通过管道写入可写流
     reader.pipe(upStream);
+    // 注意，这里的返回不带目录名称
     var imgUrl = `${ctx.request.header.origin.substring(0,7)}${ctx.request.header.host}/${fileStamp}`
     const response = require('../../dao/baseResponse')
     response.data = imgUrl
@@ -196,7 +211,7 @@ var fn_shopImg = async (ctx,next) => {
 //
 // }
 module.exports = {
-    'GET /login': fn_login,
-    'GET /register': fn_register,
-    'POST /shopImg': fn_shopImg
+    'GET /user/login': fn_login,
+    'GET /user/register': fn_register,
+    'POST /user/shopImg': fn_shopImg
 };

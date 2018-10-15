@@ -7,6 +7,7 @@ const KoaStatic = require('koa-static')
 const path = require('path')
 const KoaSession = require('koa-session');
 
+const cors = require('koa-cors');
 app.keys = ["hello cc"]; // 这个和下面的signed: true有关，就随便起一个名字吧
 const CONFIG = {
     key: 'koa:sess', /** (string) cookie key (default is koa:sess) */
@@ -20,23 +21,30 @@ const CONFIG = {
     rolling: true, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
     renew: true, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
 };
+// 使用session
 app.use(KoaSession(CONFIG, app));
-app.use(async(ctx, next) => {
-    ctx.set("Access-Control-Allow-Origin", ctx.request.header.origin);
-    ctx.set('Access-Control-Allow-Credentials', true);
-    ctx.set("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
-    // ctx.set("Access-Control-Max-Age", "3600");
-    ctx.set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control, token");
-    await next();
-});
 
+// koa-cors中已经处理了对于options的请求
+app.use(cors({
+    origin: function (ctx) {
+        return ctx.header.origin
+    },
+    exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
+    maxAge: 5,
+    credentials: true,
+    allowMethods: ['POST', 'GET', 'PUT', 'OPTIONS', 'DELETE'],
+    allowHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Cache-Control', 'token'],
+}))
+// 静态文件服务器,有目录的话，使用koa-static-folder代替koa-static
 app.use(KoaStatic(
-    path.join( __dirname,  'img')
+    // path.join(__dirname, './img/userImg')
+    './img/userImg'
 ))
+// 接口上传json数据解析
 app.use(koaBody({
     multipart: true,
     formidable: {
-        maxFileSize: 200*1024*1024    // 设置上传文件大小最大限制，默认2M
+        maxFileSize: 10*1024*1024    // 设置上传文件大小最大限制，默认2M
     }
 }));
 app.use(bodyParser());

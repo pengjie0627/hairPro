@@ -23,7 +23,12 @@ function addMapping(router, mapping) {
             console.log(`PUT path ${path}`);
             router.get(path, mapping[url]);
             console.log(`PUT ${path}`)
-        } else {
+        } else if (url.startsWith('OPTIONS ')) {
+            var path = url.substring(8);// 从第4位开始截取
+            console.log(`OPTIONS path ${path}`);
+            router.get(path, mapping[url]);
+            console.log(`OPTIONS ${path}`)
+        }else {
             console.log('无效的url')
         }
     }

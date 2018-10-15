@@ -60,7 +60,7 @@
   import HeaderView from '@/components/cmp/HeaderView.vue'
   import ContentView from '@/components/cmp/contentView.vue'
   import 'weui/dist/style/weui.min.css'
-  import weui from 'static/js/weui.min.js'
+  import weui from 'static/js/weui.js'
 export default {
   components: {
     HeaderView,
@@ -78,7 +78,7 @@ export default {
   mounted: function () {
     var uploadCount = 0;
     weui.uploader('#uploader', {
-      url: 'http://localhost:3006/shopImg',
+      url: 'http://localhost:3006/user/shopImg',
       auto: true,
       type: 'file',
       fileVal: 'file',
@@ -129,9 +129,12 @@ export default {
       onBeforeSend: function(data, headers){
         console.log(this, data, headers);
         // $.extend(data, { test: 1 }); // 可以扩展此对象来控制上传参数
-        $.extend(headers, {'Content-Type': 'multipart/form-data'}); // 可以扩展此对象来控制上传头部
-
+        // $.extend(headers, {
+        //   'Content-Type': 'multipart/form-data',
+        //   'Accept': 'application/json, text/plain, */*'
+        // }); // 可以扩展此对象来控制上传头部
         // return false; // 阻止文件上传
+        return headers
       },
       onProgress: function(procent){
         console.log(this, procent);

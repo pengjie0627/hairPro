@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     getUser: function () {
-      return HttpClient.get(`/register?userName=${this.userName.trim()}&password=${this.password.trim()}`)
+      return HttpClient.get(`/user/register?userName=${this.userName.trim()}&password=${this.password.trim()}`)
     },
     onLogin: function () {
       if (this.password !== this.passwordConfirm) {

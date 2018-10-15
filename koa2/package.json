@@ -12,9 +12,9 @@
     "koa": "^2.5.3",
     "koa-body": "^4.0.4",
     "koa-bodyparser": "^4.2.1",
+    "koa-cors": "^0.0.16",
     "koa-router": "^7.4.0",
     "koa-session": "^5.9.0",
-    "koa-static": "^5.0.0",
     "multiparty": "^4.2.1",
     "mysql": "^2.16.0",
     "socket.io": "^2.1.1"
