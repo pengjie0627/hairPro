@@ -167,49 +167,7 @@ var fn_shopImg = async (ctx,next) => {
     response.total = 0
     ctx.response.body = response
 }
-/**
- * 检查表存在
- */
-// function checkTableExist() {
-//     return new Promise(((resolve, reject) => {
-//         // 用户表检查
-//         let userTable =  db.query('show tables like "user"')
-//         if (userTable.length === 0) {// 表不存在
-//             console.log('用户表不存在,正在创建')
-//             db.createTable(require('../../mysql/table').user)
-//         } else { // 表存在
-//             console.log('用户表存在')
-//         }
-//         // 门店表检查
-//         let shopListTable = db.query('show tables like "shopList"')
-//         if (shopListTable.length === 0) {// 表不存在
-//             console.log('门店表不存在,正在创建')
-//             db.createTable(require('../../mysql/table').shopList)
-//         } else { // 表存在
-//             console.log('门店表表存在')
-//         }
-//         // 员工表检查
-//         let employTable = db.query('show tables like "employ"')
-//         if (employTable.length === 0) {// 表不存在
-//             console.log('员工表不存在,正在创建')
-//             db.createTable(require('../../mysql/table').employ)
-//             // await db.add(`insert into employ(name,mobile,dateTime,password,remark,auth,checked) values('user','13838543062','2018-09-30','user','店长账号','1','1')`)
-//             console.log('店长账号创建成功')
-//         } else { // 表存在
-//             console.log('员工表存在')
-//         }
-//         // 客户表检查
-//         let customTable = db.query('show tables like "custom"')
-//         if (customTable.length === 0) {// 表不存在
-//             console.log('顾客表不存在,正在创建')
-//             db.createTable(require('../../mysql/table').custom)
-//         } else { // 表存在
-//             console.log('顾客表存在')
-//         }
-//         resolve()
-//     }))
-//
-// }
+
 module.exports = {
     'GET /user/login': fn_login,
     'GET /user/register': fn_register,

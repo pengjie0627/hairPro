@@ -51,6 +51,7 @@
             <el-input maxLength="20" v-model="shopLevel" :disabled="true" placeholder="请输入门店等级"></el-input>
           </el-form-item>
         </el-form>
+        <el-button class="btn-save" @click="onToSave" type="primary">保存</el-button>
       </content-view>
 
     </div>
@@ -61,6 +62,7 @@
   import ContentView from '@/components/cmp/contentView.vue'
   import 'weui/dist/style/weui.min.css'
   import weui from 'static/js/weui.js'
+  import HttpClient from 'http/httpClient.js'
 export default {
   components: {
     HeaderView,
@@ -72,8 +74,31 @@ export default {
         shopAddress: '',
         shopSize: '0',
         shopOwner: '',
-        shopLevel: '低'
+        shopLevel: '低',
+        img: []
       }
+  },
+  methods: {
+    onToSave() {
+      let qs = require('qs')
+      HttpClient.post('/shop/shopAdd', qs.stringify(
+        {
+          name: this.shopName,
+          address: this.shopAddress,
+          size: this.shopSize,
+          owner: this.shopOwner,
+          img: this.img,
+          level: this.shopLevel
+        })).then((resp) => {
+        if (resp.success) {
+          this.$message.success(resp.message)
+          this.img = []
+          // this.$router.push({name:'employDtl', query: {employ: JSON.stringify(resp.data), type: 'employAdd'}})
+        }
+      }).catch((error) => {
+        this.$message.error(error.message)
+      })
+    }
   },
   mounted: function () {
     var uploadCount = 0;
@@ -140,9 +165,8 @@ export default {
         console.log(this, procent);
         // return true; // 阻止默认行为，不使用默认的进度显示
       },
-      onSuccess: function (ret) {
-        console.log(this, ret);
-        // return true; // 阻止默认行为，不使用默认的成功态
+      onSuccess: (ret) => {
+        this.img.push(ret.data)
       },
       onError: function(err){
         console.log(this, err);
@@ -153,6 +177,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.btn-save{
+  width: 96%;
+  margin: 0 2%;
+}
 </style>

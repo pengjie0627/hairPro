@@ -16,7 +16,7 @@ var table = {
         shopName VARCHAR(20) NOT NULL,
         shopAddress VARCHAR(50) NOT NULL,
         shopSize SMALLINT UNSIGNED,
-        shopImg VARCHAR(20) NOT NULL,
+        shopImg VARCHAR(300) NOT NULL,
         shopLevel VARCHAR(20) NOT NULL
     )`,
     // 员工表

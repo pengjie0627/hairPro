@@ -37,8 +37,19 @@ app.use(cors({
 }))
 // 静态文件服务器,有目录的话，使用koa-static-folder代替koa-static
 app.use(KoaStatic(
-    // path.join(__dirname, './img/userImg')
-    './img/userImg'
+    path.join(__dirname, './img/userImg')
+))
+app.use(KoaStatic(
+    path.join(__dirname, './img/customerImg')
+))
+app.use(KoaStatic(
+    path.join(__dirname, './img/employImg')
+))
+app.use(KoaStatic(
+    path.join(__dirname, './img/subAdminImg')
+))
+app.use(KoaStatic(
+    path.join(__dirname, './img/otherImg')
 ))
 // 接口上传json数据解析
 app.use(koaBody({
