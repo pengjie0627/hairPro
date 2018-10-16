@@ -28,7 +28,7 @@
             <el-input maxLength="50" v-model="shopOwner" placeholder="请输入店主名称"></el-input>
           </el-form-item>
           <el-form-item label="店主手机" prop="pass">
-            <el-input maxLength="50" v-model="shopMobile" :disabled="true" placeholder="请输入店主手机号码"></el-input>
+            <el-input maxLength="11" v-model="shopMobile" :disabled="true" placeholder="请输入店主手机号码"></el-input>
           </el-form-item>
           <el-form-item label="门店图片" prop="pass">
             <div class="weui-cells weui-cells_form" id="uploader">
@@ -70,6 +70,7 @@
   import 'weui/dist/style/weui.min.css'
   import weui from 'static/js/weui.js'
   import HttpClient from 'http/httpClient.js'
+  import BaseUrl from 'http/httpBaseuRL.js'
 export default {
   components: {
     HeaderView,
@@ -94,7 +95,30 @@ export default {
     }
   },
   methods: {
+    formValidate() {
+      if (!this.shopName) {
+        this.$message.error('请填写门店名称')
+        return false
+      }
+      else if (!this.shopAddress) {
+        this.$message.error('请填写门店地址')
+        return false
+      }
+      else if (!this.shopOwner) {
+        this.$message.error('请填写店主名称')
+        return false
+      }
+      else if (this.img.length === 0 && !this.imgCopy) {
+        this.$message.error('请上传门店图片')
+        return false
+      } else {
+        return true
+      }
+    },
     onToSave() {
+      if (!this.formValidate()) {
+        return false
+      }
       let url = ''
       if (this.type === 'edit') {
         url = '/shop/shopEdit'
@@ -149,7 +173,7 @@ export default {
     this.shopMobile = this.$store.state.user.user.mobile
     var uploadCount = 0;
     weui.uploader('#uploader', {
-      url: 'http://localhost:3006/user/shopImg',
+      url: BaseUrl.url + '/user/shopImg',
       auto: true,
       type: 'file',
       fileVal: 'file',

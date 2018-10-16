@@ -25,6 +25,9 @@
         <el-table-column
           prop="shopSize"
           label="规模">
+          <template slot-scope="scope">
+            {{scope.row.shopSize.toString() | shopSize}}
+          </template>
         </el-table-column>
       </el-table>
     </ContentView>

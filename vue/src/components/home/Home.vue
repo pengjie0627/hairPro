@@ -10,17 +10,17 @@
           </el-col>
           <el-col :style="{color: selectIndex === 1 ? '#409EFF' : ''}" :span="6" class="col-padding">
             <div @click="onSelect(1)">
-              <div class="center"><i class="el-icon-mobile-phone"></i></div><div class="center">员工管理</div>
+              <div class="center"><i class="el-icon-service"></i></div><div class="center">员工管理</div>
             </div>
           </el-col>
           <el-col :style="{color: selectIndex === 2 ? '#409EFF' : ''}" :span="6" class="col-padding">
             <div @click="onSelect(2)">
-              <div class="center"><i class="el-icon-mobile-phone"></i></div><div class="center">客户管理</div>
+              <div class="center"><i class="el-icon-search"></i></div><div class="center">客户管理</div>
             </div>
           </el-col>
           <el-col :style="{color: selectIndex === 3 ? '#409EFF' : ''}" :span="6" class="col-padding">
             <div @click="onSelect(3)">
-              <div class="center"><i class="el-icon-mobile-phone"></i></div><div class="center">个人设置</div>
+              <div class="center"><i class="el-icon-setting"></i></div><div class="center">个人设置</div>
             </div>
           </el-col>
         </el-row>

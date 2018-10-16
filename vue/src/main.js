@@ -8,6 +8,10 @@ import 'element-ui/lib/theme-chalk/index.css'
 import VueSocketio from 'vue-socket.io'
 import vuex from 'vuex'
 import store from './store'
+import CustomFilter from 'filter/filter.js'
+import CommonDirective from 'directive/directive.js'
+CustomFilter.init()
+CommonDirective.init()
 Vue.use(vuex);
 
 Vue.use(VueSocketio, 'http://localhost:3006');

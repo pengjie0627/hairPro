@@ -1,12 +1,9 @@
 import axios from 'axios'
-// const qs = require('qs')
-// axios.defaults.paramsSerializer = params => {
-//   return qs.stringify(params, { arrayFormat: 'repeat' })
-// }
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+import BaseUrl from './httpBaseuRL.js'
+
 const instance = axios.create({
   // baseURL: 'http://114.116.86.37:3000',
-  baseURL: 'http://localhost:3006',
+  baseURL: BaseUrl.url,
   timeout: 6000,
   withCredentials: true
 });

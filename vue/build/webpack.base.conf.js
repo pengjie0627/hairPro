@@ -30,6 +30,8 @@ module.exports = {
       'http': resolve('src/http'),
       'mgr': resolve('src/mgr'),
       'static': resolve('static'),
+      'filter': resolve('src/filter'),
+      'directive': resolve('src/directive')
     }
   },
   module: {

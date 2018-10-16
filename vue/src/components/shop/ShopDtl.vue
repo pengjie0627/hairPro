@@ -12,7 +12,7 @@
             <div>{{shopAddress}}</div>
           </el-form-item>
           <el-form-item label="门店规模" prop="pass">
-            <div>{{shopSize}}</div>
+            <div>{{shopSize.toString() | shopSize}}</div>
           </el-form-item>
           <el-form-item label="店主名称" prop="pass">
             <div>{{shopOwner}}</div>
