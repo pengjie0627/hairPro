@@ -1,61 +1,64 @@
 <template>
     <div>
-      <header-view title="首页">
-        <!--<template slot="left">返回</template>-->
-        <!--<template slot="right">新增</template>-->
-      </header-view>
-      <div class="home">
-        <div class="item"><el-button type="success" @click="onToAddShop">我是店主</el-button></div>
-        <div class="item"><el-button type="success" @click="onToRelateShop">我是店员</el-button></div>
-      </div>
+      <router-view></router-view>
+      <footer class="footer">
+        <el-row>
+          <el-col :style="{color: selectIndex === 0 ? '#409EFF' : ''}" :span="6" class="col-padding">
+            <div @click="onSelect(0)">
+              <div class="center"><i class="el-icon-mobile-phone"></i></div><div class="center">门店管理</div>
+            </div>
+          </el-col>
+          <el-col :style="{color: selectIndex === 1 ? '#409EFF' : ''}" :span="6" class="col-padding">
+            <div @click="onSelect(1)">
+              <div class="center"><i class="el-icon-mobile-phone"></i></div><div class="center">员工管理</div>
+            </div>
+          </el-col>
+          <el-col :style="{color: selectIndex === 2 ? '#409EFF' : ''}" :span="6" class="col-padding">
+            <div @click="onSelect(2)">
+              <div class="center"><i class="el-icon-mobile-phone"></i></div><div class="center">客户管理</div>
+            </div>
+          </el-col>
+          <el-col :style="{color: selectIndex === 3 ? '#409EFF' : ''}" :span="6" class="col-padding">
+            <div @click="onSelect(3)">
+              <div class="center"><i class="el-icon-mobile-phone"></i></div><div class="center">个人设置</div>
+            </div>
+          </el-col>
+        </el-row>
+      </footer>
     </div>
 </template>
 
 <script>
   import HeaderView from '@/components/cmp/HeaderView.vue'
   export default {
-    components: {HeaderView},
-    mounted: function() {
-      this.checkPermission = Boolean(this.$route.query.permission)
-      this.employName = this.$route.query.name
+    components: {
+      HeaderView
     },
     data() {
       return {
-        employName: '',
-        checkPermission: '',
+        selectIndex: 0
       }
     },
     methods: {
-      /**
-       * 新增门店
-       */
-      onToAddShop: function () {
-        this.$router.push('/shopAdd')
-      },
-      /**
-       * 关联门店
-       */
-      onToRelateShop: function() {
-        this.$router.push('/relatedShop')
+      onSelect: function (index) {
+        this.selectIndex = index
       }
     }
   }
 </script>
 
 <style scoped>
-  .home{
-    margin-top: 70px;
-  }
-  .title{
+.footer{
+  height: 50px;
+  background: #e4e7ed;
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+}
+  .center{
     text-align: center;
-    background: #409EFF;
-    height: 50px;
-    line-height: 50px;
-    font-size: 20px;
-    color: white;
   }
-  .item{
-    text-align: center;
-    margin-top: 20px;
+  .col-padding{
+    padding: 5px;
   }
 </style>

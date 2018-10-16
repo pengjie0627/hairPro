@@ -2,6 +2,7 @@
     <div class="header-view" ref="header">
       <el-row>
         <el-col :span="leftSpan" class="text">
+          <span v-if="isShowBack" @click="onBack">返回</span>
           <slot name="left"></slot>
         </el-col>
         <el-col :span="getCenterSpan">{{title}}</el-col>
@@ -16,6 +17,7 @@
 export default {
   props: {
     title: String,
+    isShowBack: true,
     leftSpan: {
       type: Number,
       default: 4
@@ -28,6 +30,11 @@ export default {
   computed: {
     getCenterSpan: function () {
       return 24 - this.leftSpan - this.rightSpan
+    }
+  },
+  methods: {
+    onBack: function () {
+      this.$router.back()
     }
   }
 }
@@ -44,5 +51,6 @@ export default {
 }
   .text{
     font-size: 15px;
+    height: 50px;
   }
 </style>

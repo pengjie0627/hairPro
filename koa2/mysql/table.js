@@ -11,7 +11,8 @@ var table = {
     // 门店表
     shopList: `CREATE TABLE shopList(
         id SMALLINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-        user VARCHAR(11) NOT NULL,
+        user VARCHAR(50) NOT NULL,
+        shopMobile VARCHAR(11) NOT NULL,
         shopUuid VARCHAR(11) UNIQUE NOT NULL,
         shopName VARCHAR(20) NOT NULL,
         shopAddress VARCHAR(50) NOT NULL,

@@ -167,9 +167,19 @@ var fn_shopImg = async (ctx,next) => {
     response.total = 0
     ctx.response.body = response
 }
-
+var fn_userType = async (ctx) => {
+    await db.update(`update user set userType = '${ctx.request.query.type}' where userName = ${ctx.request.query.mobile}`)
+    const response = require('../../dao/baseResponse')
+    response.data = ''
+    response.success = true
+    response.status = 200
+    response.total = 0
+    response.message = '已切换到店主状态'
+    ctx.response.body = response
+}
 module.exports = {
     'GET /user/login': fn_login,
     'GET /user/register': fn_register,
+    'GET /user/userType': fn_userType,
     'POST /user/shopImg': fn_shopImg
 };

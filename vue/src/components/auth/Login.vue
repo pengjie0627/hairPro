@@ -40,8 +40,8 @@ export default {
     onLogin: function () {
       this.getUser().then((resp) => {
         if (resp.success) {
-          // this.$store.dispatch('actionUser', {name: resp.data.userName, permission: resp.data.permission})
-          this.$router.push('home')
+          this.$store.dispatch('actionUser', {mobile: resp.data.userName})
+          this.$router.push('selectRole')
         }
       }).catch((error) => {
         this.$message.error(error.message);
