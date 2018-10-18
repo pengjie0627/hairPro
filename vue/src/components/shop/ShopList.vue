@@ -1,6 +1,9 @@
 <template>
   <div>
-    <HeaderView title="门店列表" :isShowBack="true">
+    <HeaderView title="门店列表" :isShowBack="false">
+      <template slot="left">
+        <span @click="onToSelectRole">返回</span>
+      </template>
       <template slot="right">
         <span @click="onToAdd">新增</span>
       </template>
@@ -18,15 +21,23 @@
           </template>
         </el-table-column>
         <el-table-column
+          align="center"
           prop="shopMobile"
           label="店主手机"
           >
         </el-table-column>
         <el-table-column
+          align="center"
+          prop="shopUuid"
+          label="门店码"
+        >
+        </el-table-column>
+        <el-table-column
+          align="center"
           prop="shopSize"
-          label="规模">
+          label="门店报表">
           <template slot-scope="scope">
-            {{scope.row.shopSize.toString() | shopSize}}
+            <a class="name" @click="onToShopReport(scope.row)">查看</a>
           </template>
         </el-table-column>
       </el-table>
@@ -67,6 +78,13 @@
       },
       onToShopDtl(row) {
         this.$router.push({name: 'shopDtl', query: {uuid: row.shopUuid}})
+      },
+      onToShopReport(row) {
+        // todo
+        this.$router.push({name: 'shopReport', query: {uuid: row.shopUuid}})
+      },
+      onToSelectRole: function () {
+        this.$router.replace({name: 'selectRole'})
       }
     }
   }

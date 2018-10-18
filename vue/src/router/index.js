@@ -9,6 +9,9 @@ import ShopRelated from '@/components/shop/ShopRelated.vue'
 import Home from '@/components/home/Home.vue'
 import ShopList from '@/components/shop/ShopList.vue'
 import ShopDtl from '@/components/shop/ShopDtl.vue'
+import ShopReport from '@/components/shop/ShopReport.vue'
+import EmployList from '@/components/employ/EmployList.vue'
+import EmployAdd from '@/components/employ/EmployAdd.vue'
 Vue.use(Router)
 
 const router = new Router({
@@ -57,6 +60,21 @@ const router = new Router({
           path: '/shopDtl',
           name: 'shopDtl',
           component: ShopDtl
+        },
+        {
+          path: '/shopReport',
+          name: 'shopReport',
+          component: ShopReport
+        },
+        {
+          path: '/employList',
+          name: 'employList',
+          component: EmployList
+        },
+        {
+          path: '/employAdd',
+          name: 'employAdd',
+          component: EmployAdd
         }
       ]
     }

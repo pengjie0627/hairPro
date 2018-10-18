@@ -31,7 +31,7 @@ var table = {
         loginPwd VARCHAR(20) NOT NULL,
         idCard VARCHAR(20) NOT NULL,
         bankCard VARCHAR(50) NOT NULL,
-        img VARCHAR(20) NOT NULL,
+        img VARCHAR(500) NOT NULL,
         salary VARCHAR(20),
         introducePercent VARCHAR(10),
         remark VARCHAR(255) NOT NULL,

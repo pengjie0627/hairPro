@@ -42,6 +42,20 @@
     methods: {
       onSelect: function (index) {
         this.selectIndex = index
+        switch (index) {
+          case 0:
+            this.$router.push('shopList')
+                break
+          case 1:
+            this.$router.push('employList')
+            break
+          case 2:
+            this.$router.push('shopList')
+            break
+          case 3:
+            this.$router.push('shopList')
+            break
+        }
       }
     }
   }
