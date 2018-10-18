@@ -126,9 +126,19 @@ var fn_employDtl = async (ctx) => {
     body.data = curEmploy
     ctx.response.body = body
 }
+var fn_employDelete = async function(ctx) {
+    await Db.delete(`delete from employ where mobile = '${ctx.request.body.mobile}'`)
+    let body = require('../../dao/baseResponse.js')
+    body.message = '员工删除成功'
+    body.total = 0
+    body.success = true
+    body.data = ''
+    ctx.response.body = body
+}
 module.exports = {
     'GET /employ/employList': fn_employList,
     'GET /employ/dtl': fn_employDtl,
     'POST /employ/add': fn_employAdd,
-    'POST /employ/edit': fn_employEdit
+    'POST /employ/edit': fn_employEdit,
+    'POST /employ/delete': fn_employDelete
 }

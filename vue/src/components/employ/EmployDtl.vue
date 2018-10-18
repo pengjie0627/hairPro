@@ -8,7 +8,10 @@
     <ContentView>
       <el-form :model="employ" ref="employ" label-width="85px" class="employ">
         <el-form-item label="员工姓名：" prop="name">
-          {{employ.name}}
+          <el-row>
+            <el-col :span="12">{{employ.name}}</el-col>
+            <el-col :span="12"><el-button type="danger" size="mini" @click="deleteShop">删除该员工</el-button></el-col>
+          </el-row>
         </el-form-item>
         <el-form-item label="员工手机：" prop="mobile">
           {{employ.mobile}}
@@ -89,6 +92,28 @@
       }
     },
     methods: {
+      deleteShop() {
+        this.$confirm('此操作将永久删除该员工, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          customClass: 'widthClass',
+          type: 'warning'
+        }).then(() => {
+          let qs = require('qs')
+          HttpClient.post('/employ/delete', qs.stringify(
+            {
+              mobile: this.$route.query.mobile
+            })).then((resp) => {
+            if (resp.success) {
+              this.$message.success(resp.message)
+              this.$router.replace({name:'employList'})
+            }
+          }).catch((error) => {
+            this.$message.error(error.message)
+          })
+        }).catch(() => {
+        });
+      },
       getEmployDtl() {
         HttpClient.get(`/employ/dtl?mobile=${this.$route.query.mobile}`).then((resp) => {
           if (resp.success) {
@@ -109,7 +134,10 @@
   }
 </script>
 
-<style scoped>
+<style>
+  .widthClass{
+    width: 315px;
+  }
   .employ{
     margin: 10px;
   }

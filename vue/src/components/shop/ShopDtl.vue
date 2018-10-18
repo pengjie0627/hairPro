@@ -1,12 +1,15 @@
 <template>
     <div>
-      <HeaderView title="店铺详情" :isShowBack="true">
+      <HeaderView title="门店详情" :isShowBack="true">
         <template slot="right"><span @click="onToEdit">编辑</span></template>
       </HeaderView>
       <content-view>
         <el-form style="margin-right: 10px; margin-top: 30px;" status-icon ref="ruleForm2" label-width="80px" class="demo-ruleForm">
           <el-form-item label="门店名称" prop="pass">
-            <div>{{shopName}}</div>
+            <el-row>
+              <el-col :span="12"><div>{{shopName}}</div></el-col>
+              <el-col :span="12"><el-button type="danger" size="mini" @click="deleteShop">删除该门店</el-button></el-col>
+            </el-row>
           </el-form-item>
           <el-form-item label="门店地址" prop="pass">
             <div>{{shopAddress}}</div>
@@ -62,6 +65,28 @@
       this.getShopDtl()
     },
     methods: {
+      deleteShop() {
+        this.$confirm('此操作将永久删除该门店, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          customClass: 'widthClass',
+          type: 'warning'
+        }).then(() => {
+          let qs = require('qs')
+          HttpClient.post('/shop/shopDelete', qs.stringify(
+            {
+              shopUuid: this.$route.query.uuid
+            })).then((resp) => {
+            if (resp.success) {
+              this.$message.success(resp.message)
+              this.$router.replace({name:'shopList'})
+            }
+          }).catch((error) => {
+            this.$message.error(error.message)
+          })
+        }).catch(() => {
+        });
+      },
       getShopDtl() {
         HttpClient.get(`/shop/shopDtl?shopUuid=${this.$route.query.uuid}`).then((resp) => {
           if (resp.success) {
@@ -96,6 +121,8 @@
   }
 </script>
 
-<style scoped>
-
+<style>
+  .widthClass{
+    width: 315px;
+  }
 </style>

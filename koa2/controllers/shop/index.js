@@ -70,9 +70,19 @@ var fn_shopDtl = async function(ctx) {
     body.data = shopList
     ctx.response.body = body
 }
+var fn_shopDelete = async function(ctx) {
+    await Db.delete(`delete from shopList where shopUuid = '${ctx.request.body.shopUuid}'`)
+    let body = require('../../dao/baseResponse.js')
+    body.message = '门店删除成功'
+    body.total = 0
+    body.success = true
+    body.data = ''
+    ctx.response.body = body
+}
 module.exports = {
     'POST /shop/shopAdd': fn_shopAdd,
     'POST /shop/shopEdit': fn_shopEdit,
+    'POST /shop/shopDelete': fn_shopDelete,
     'GET /shop/shopList': fn_shopList,
     'GET /shop/shopDtl': fn_shopDtl
 };
