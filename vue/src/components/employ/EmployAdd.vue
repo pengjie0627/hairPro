@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderView title="新增员工" :isShowBack="true">
+    <HeaderView :title="title" :isShowBack="true">
       <template slot="right">
         <span @click="onToSaveEmploy('employ')">保存</span>
       </template>
@@ -11,7 +11,7 @@
           <el-input v-model="employ.name" placeholder="请输入员工姓名"></el-input>
         </el-form-item>
         <el-form-item label="员工手机" prop="mobile">
-          <el-input v-model="employ.mobile" placeholder="请输入员工手机" @change="onMobileChange"></el-input>
+          <el-input v-model="employ.mobile" :disabled="type === 'edit'" placeholder="请输入员工手机" @change="onMobileChange"></el-input>
         </el-form-item>
         <el-form-item prop="dateTime" label="入职日期">
           <el-date-picker type="date" placeholder="选择入职日期" v-model="employ.dateTime" style="width: 100%;"></el-date-picker>
@@ -34,7 +34,7 @@
           <el-input v-model="employ.bankCard" placeholder="请输入银行卡号"></el-input>
         </el-form-item>
         <el-form-item label="员工图片" prop="img">
-          <ImgUploadWeui v-model="employ.img"  type="type"></ImgUploadWeui>
+          <ImgUploadWeui v-model="employ.img" :type="type" :getImgs="copyImg" @clearImg="onClearImg"></ImgUploadWeui>
         </el-form-item>
         <el-form-item label="员工工资" prop="salary">
           <el-input v-model="employ.salary" placeholder="请输入员工工资"></el-input>
@@ -69,7 +69,9 @@
     },
     data() {
       return {
+        title: '',
         type: '',
+        copyImg: [],
         shops: [],
         employ: {
           name: '',
@@ -80,7 +82,7 @@
           loginPwd: '',
           idCard: '',
           bankCard: '',
-          img: '',
+          img: [],
           salary: '',
           introducePercent: '',
           remark: '',
@@ -124,6 +126,9 @@
       }
     },
     methods: {
+      onClearImg() {
+        this.copyImg = []
+      },
       getShopList() {
         HttpClient.get(`/shop/shopList?mobile=${this.$store.state.user.user.mobile}`).then((resp) => {
           if (resp.success) {
@@ -142,10 +147,14 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             let url = this.type === 'add' ? '/employ/add' : '/employ/edit'
+            if (this.type === 'edit') {
+              Array.prototype.push.apply(this.employ.img,this.copyImg)
+            }
             let qs = require('qs')
             HttpClient.post(url, qs.stringify(
               {
                 name: this.employ.name,
+                oldMobile: this.$route.query.mobile ? this.$route.query.mobile : '',
                 mobile: this.employ.mobile,
                 dateTime: this.employ.dateTime,
                 belongShopId: this.employ.belongShopId,
@@ -163,7 +172,7 @@
               })).then((resp) => {
               if (resp.success) {
                 this.$message.success(resp.message)
-                this.$router.push({name:'employDtl', query: {uuid: resp.data[0].mobile}})
+                this.$router.push({name:'employDtl', query: {mobile: resp.data[0].mobile}})
               }
             }).catch((error) => {
               this.$message.error(error.message)
@@ -173,11 +182,29 @@
             return false;
           }
         });
-      }
+      },
+      getEmployDtl() {
+        HttpClient.get(`/employ/dtl?mobile=${this.$route.query.mobile}`).then((resp) => {
+          if (resp.success) {
+            this.employ = resp.data[0]
+            this.employ.dateTime = new Date(this.employ.dateTime)
+            this.employ.loginAuth = !!this.employ.loginAuth,
+            this.employ.customCheckedAuth = !!this.employ.customCheckedAuth,
+            this.employ.otherEmployCheckAuth = !!this.employ.otherEmployCheckAuth
+            this.copyImg = this.employ.img = resp.data[0].img.split(',')
+          }
+        }).catch(error => {
+          this.$message.error(error.message)
+        })
+      },
     },
     mounted: function () {
       this.type = this.$route.query.type
+      this.title = this.type === 'add' ? '新增员工' : '编辑员工'
       this.getShopList()
+      if (this.type === 'edit') {
+        this.getEmployDtl()
+      }
     }
   }
 </script>

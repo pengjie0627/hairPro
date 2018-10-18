@@ -16,7 +16,7 @@
           prop="name"
           label="员工名称">
           <template slot-scope="scope">
-            <a class="name" @click="onToShopDtl(scope.row)">{{scope.row.name}}</a>
+            <a class="name" @click="onToEmployDtl(scope.row)">{{scope.row.name}}</a>
           </template>
         </el-table-column>
         <el-table-column
@@ -29,7 +29,7 @@
           prop="salary"
           label="员工薪资">
           <template slot-scope="scope">
-            {{scope.row.salary}}
+            {{scope.row.salary | amountFmt}}
           </template>
         </el-table-column>
       </el-table>
@@ -62,7 +62,10 @@
         HttpClient.get('/employ/employList').then((resp) => {
           this.employ = resp.data
         })
-      }
+      },
+      onToEmployDtl: function(row) {
+        this.$router.push({name: 'employDtl', query: {mobile: row.mobile}})
+      },
     },
     mounted: function () {
       this.getEmployList()
@@ -71,5 +74,7 @@
 </script>
 
 <style scoped>
-
+.name{
+  color: #409EFF;
+}
 </style>

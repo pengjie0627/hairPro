@@ -68,10 +68,67 @@ var fn_employAdd = async (ctx) => {
     ctx.response.body = body
 }
 var fn_employEdit = async (ctx) => {
-
+    let employ = {
+        name: ctx.request.body.name,
+        oldMobile: ctx.request.body.oldMobile,
+        mobile: ctx.request.body.mobile,
+        dateTime: ctx.request.body.dateTime,
+        belongShopId: ctx.request.body.belongShopId,
+        loginName: ctx.request.body.loginName,
+        loginPwd: ctx.request.body.loginPwd,
+        idCard: ctx.request.body.idCard,
+        bankCard: ctx.request.body.bankCard,
+        img: ctx.request.body.img,
+        salary: ctx.request.body.salary,
+        introducePercent: ctx.request.body.introducePercent,
+        remark: ctx.request.body.remark,
+        loginAuth: ctx.request.body.loginAuth,
+        customCheckedAuth: ctx.request.body.customCheckedAuth,
+        otherEmployCheckAuth: ctx.request.body.otherEmployCheckAuth
+    }
+    let curMobile = ''
+    if (employ.oldMobile === employ.mobile) {
+        curMobile = employ.mobile
+    } else {
+        curMobile = employ.oldMobile
+    }
+    await Db.add(`update 
+    employ set
+    name = '${employ.name}',
+    mobile = '${employ.mobile}',
+    dateTime = '${employ.dateTime}',
+    belongShopId = '${employ.belongShopId}',
+    loginName = '${employ.loginName}',
+    loginPwd = '${employ.loginPwd}',
+    idCard = '${employ.idCard}',
+    bankCard = '${employ.bankCard}',
+    img = '${employ.img}',
+    salary = '${employ.salary}',
+    introducePercent = '${employ.introducePercent}',
+    remark = '${employ.remark}',
+    loginAuth = ${parseInt(employ.loginAuth)},
+    customCheckedAuth = ${parseInt(employ.customCheckedAuth)},
+    otherEmployCheckAuth = ${parseInt(employ.otherEmployCheckAuth)} where mobile = '${curMobile}'`)
+    let curEmploy = await Db.query(`select * from employ where mobile = '${employ.mobile}'`)
+    let body = require('../../dao/baseResponse.js')
+    body.message = '员工创建成功'
+    body.total = 0
+    body.success = true
+    body.data = curEmploy
+    ctx.response.body = body
+}
+var fn_employDtl = async (ctx) => {
+    let curEmploy = await Db.query(`select * from employ where mobile = '${ctx.request.query.mobile}'`)
+    let body = require('../../dao/baseResponse.js')
+    body.message = '员工创建成功'
+    body.total = 0
+    body.success = true
+    body.data = curEmploy
+    ctx.response.body = body
 }
 module.exports = {
     'GET /employ/employList': fn_employList,
+    'GET /employ/dtl': fn_employDtl,
     'POST /employ/add': fn_employAdd,
     'POST /employ/edit': fn_employEdit
 }

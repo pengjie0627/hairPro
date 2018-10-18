@@ -4,12 +4,14 @@
       <div class="weui-cell__bd">
         <div class="weui-uploader">
           <div class="weui-uploader__hd">
-            <!--<p class="weui-uploader__title">图片上传</p>-->
-            <!--<div class="weui-uploader__info"><span id="uploadCount">0</span>/5</div>-->
+            <div class="weui-uploader__info">
+              <el-button size="mini" @click="onReUploadImg">重新上传</el-button>
+            </div>
           </div>
           <div class="weui-uploader__bd">
             <ul class="weui-uploader__files" id="uploaderFiles">
-              <li v-if="type === 'edit'" v-for="item in getImgs" class="weui-uploader__file">
+
+              <li v-if=" type ==='edit'" v-for="item in getImgs" class="weui-uploader__file">
                 <img :src="item" alt="暂无图片" style="width: 77px;height: 77px">
               </li>
             </ul>
@@ -30,20 +32,24 @@
 export default {
   props: {
     value: '',
-    type: ''
+    type: '',
+    getImgs: ''
   },
   data() {
     return {
       img: []
     }
   },
-  computed: {
-    getImgs() {
-      return this.img
+  methods: {
+    onReUploadImg() {
+      $('#uploaderFiles').children().remove()
+      this.img = []
+      this.$emit('clearImg')
     }
   },
   mounted: function () {
     var uploadCount = 0;
+    let that = this
     weui.uploader('#uploader', {
       url: BaseUrl.url + '/user/shopImg',
       auto: true,
@@ -60,7 +66,12 @@ export default {
       },
       onBeforeQueued: function(files) {
         // `this` 是轮询到的文件, `files` 是所有文件
-
+        if (that.type === 'edit') {
+          if (that.getImgs.length > 5) {
+            weui.alert('最多只能上传5张图片，请重新选择');
+            return false;
+          }
+        }
         if(["image/jpg", "image/jpeg", "image/png"].indexOf(this.type) < 0){
           weui.alert('请上传图片');
           return false; // 阻止文件添加

@@ -21,5 +21,12 @@ export default class commonFilter {
         return ''
       }
     })
+    Vue.filter('amountFmt', function (value) {
+      if (value) {
+        return parseFloat(value).toFixed(2)
+      } else {
+        return '0.00'
+      }
+    })
   }
 }
