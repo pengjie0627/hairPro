@@ -16,6 +16,7 @@ import EmployDtl from '@/components/employ/EmployDtl.vue'
 import CustomList from '@/components/customer/CustomList.vue'
 import CustomAdd from '@/components/customer/CustomAdd.vue'
 import CustomDtl from '@/components/customer/CustomDtl.vue'
+import SettingList from '@/components/setting/SettingList.vue'
 Vue.use(Router)
 
 const router = new Router({
@@ -86,6 +87,11 @@ const router = new Router({
           component: EmployDtl
         },
         {
+          path: '/settingList',
+          name: 'settingList',
+          component: SettingList
+        },
+        {
           path: '/customList',
           name: 'customList',
           component: CustomList
@@ -94,6 +100,11 @@ const router = new Router({
           path: '/customAdd',
           name: 'customAdd',
           component: CustomAdd
+        },
+        {
+          path: '/customDtl',
+          name: 'customDtl',
+          component: CustomDtl
         },
         {
           path: '/customDtl',
