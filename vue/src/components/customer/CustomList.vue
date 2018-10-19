@@ -27,7 +27,7 @@
         <el-table-column
           align="center"
           prop="hairTime"
-          label="剪发时间">
+          label="最近剪发时间">
         </el-table-column>
       </el-table>
     </ContentView>

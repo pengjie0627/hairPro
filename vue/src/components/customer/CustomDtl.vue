@@ -57,7 +57,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item class="form-item-wrap" label="操作：" prop="cutHairPrice">
-              <a style="color: #409EFF" @click="onToEditCustom(form.id)">编辑</a>
+              <a style="color: #409EFF" @click="onToEditCustom(form.id)">编辑</a>&nbsp;&nbsp;
               <a style="color: red" @click="deleteCustom(form.id)">删除</a>
             </el-form-item>
           </el-col>

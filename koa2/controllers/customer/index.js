@@ -1,11 +1,21 @@
 const Db = require('../../mysql/utils.js')
 var fn_customList = async (ctx) => {
     let customList = await Db.query(`select * from  custom order by hairTime desc`)
+
+    // 去重
+    var result = [];
+    var obj = {};
+    for(var i =0; i<customList.length; i++){
+        if(!obj[customList[i].mobile]){
+            result.push(customList[i]);
+            obj[customList[i].mobile] = true;
+        }
+    }
     let body = require('../../dao/baseResponse.js')
     body.message = ''
-    body.total = customList.length
+    body.total = result.length
     body.success = true
-    body.data = customList
+    body.data = result
     ctx.response.body = body
 }
 var fn_customEdit = async (ctx) => {
