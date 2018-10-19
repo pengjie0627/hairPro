@@ -22,7 +22,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="介绍人姓名" prop="introduceEmployName">
-          <el-select v-model="employ.introduceEmployName" placeholder="请输入介绍人姓名" style="width: 100%">
+          <el-select v-model="employ.introduceEmployName" @change="onNameChange()" placeholder="请输入介绍人姓名" style="width: 100%">
             <el-option label="无" value="none">无</el-option>
             <el-option v-for="employ in employs" :label="employ.name" :value="employ.mobile">{{employ.name}}[{{employ.mobile}}]</el-option>
           </el-select>
@@ -31,7 +31,7 @@
           <!--<el-input  v-model="employ.introduceEmployMobile" placeholder="请输入介绍人手机"></el-input>-->
         <!--</el-form-item>-->
         <el-form-item label="理发师姓名" prop="cutHairEmployName">
-          <el-select v-model="employ.cutHairEmployName" placeholder="请输入理发师姓名" style="width: 100%">
+          <el-select v-model="employ.cutHairEmployName" @change="onNameChange()" placeholder="请输入理发师姓名" style="width: 100%">
             <el-option label="无" value="none">无</el-option>
             <el-option v-for="employ in employs" :label="employ.name" :value="employ.mobile">{{employ.name}}[{{employ.mobile}}]</el-option>
           </el-select>
@@ -121,6 +121,9 @@
       }
     },
     methods: {
+      onNameChange() {
+        this.$forceUpdate()
+      },
       onClearImg() {
         this.copyImg = []
       },

@@ -6,7 +6,7 @@
       </template>
     </HeaderView>
     <ContentView>
-      <el-form v-for="form in employ"  ref="employ" label-width="100px" class="employ">
+      <el-form v-for="form in employ"  ref="employ" label-width="100px" class="custom-dtl">
         <el-row>
           <el-col :span="12">
             <el-form-item class="form-item-wrap" label="客户姓名：" prop="name">
@@ -193,7 +193,7 @@
   .widthClass{
     width: 315px;
   }
-  .employ{
+  .custom-dtl{
     margin: 10px;
     background: #eee;
   }
