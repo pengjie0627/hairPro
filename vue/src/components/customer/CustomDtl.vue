@@ -2,46 +2,78 @@
   <div>
     <HeaderView title="客户详情" :isShowBack="true">
       <template slot="right">
-        <span @click="onToEditCustom('employ')">编辑</span>
+        <!--<span @click="onToEditCustom('employ')">编辑</span>-->
       </template>
     </HeaderView>
     <ContentView>
-      <el-form :model="employ"  ref="employ" label-width="100px" class="employ">
-        <el-form-item label="客户姓名：" prop="name">
-          {{employ.name}}
+      <el-form v-for="form in employ"  ref="employ" label-width="100px" class="employ">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item class="form-item-wrap" label="客户姓名：" prop="name">
+              {{form.name}}
+            </el-form-item>
+          </el-col>
+          <!--<el-col :span="12"><el-button type="danger" size="mini" @click="deleteCustom">删除该员工</el-button></el-col>-->
+          <el-col :span="12">
+            <el-form-item class="form-item-wrap" label="客户手机：" prop="mobile">
+              {{form.mobile}}
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item class="form-item-wrap" prop="hairTime" label="剪发日期：">
+              {{form.hairTime}}
+            </el-form-item>
+          </el-col>
+          <!--<el-col :span="12"><el-button type="danger" size="mini" @click="deleteCustom">删除该员工</el-button></el-col>-->
+          <el-col :span="12">
+            <el-form-item class="form-item-wrap" label="是否是vip：" prop="vipLevel">
+              {{form.vipLevel}}
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item class="form-item-wrap" label="介绍人姓名：" prop="introduceEmployName">
+              {{form.introduceEmployMobile}}
+            </el-form-item>
+          </el-col>
+          <!--<el-col :span="12"><el-button type="danger" size="mini" @click="deleteCustom">删除该员工</el-button></el-col>-->
+          <el-col :span="12">
+            <el-form-item class="form-item-wrap" label="理发师姓名：" prop="cutHairEmployName">
+              {{form.cutHairEmployMobile}}
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item class="form-item-wrap" label="客户图片：" prop="img">
+          <img v-for="item in form.img" :src="item" @click="onImgCheck(item)" alt="暂无图片" style="width: 60px;height: 60px;margin-left: 10px">
         </el-form-item>
-        <el-form-item label="客户手机：" prop="mobile">
-          {{employ.mobile}}
-        </el-form-item>
-        <el-form-item prop="hairTime" label="剪发日期：">
-          {{employ.hairTime}}
-        </el-form-item>
-        <el-form-item label="是否是vip：" prop="vipLevel">
-          {{employ.vipLevel}}
-        </el-form-item>
-        <el-form-item label="介绍人姓名：" prop="introduceEmployName">
-          {{getIntroduceEmployName}}
-        </el-form-item>
-        <!--<el-form-item label="介绍人手机" prop="introduceEmployMobile">-->
-        <!--<el-input  v-model="employ.introduceEmployMobile" placeholder="请输入介绍人手机"></el-input>-->
-        <!--</el-form-item>-->
-        <el-form-item label="理发师姓名：" prop="cutHairEmployName">
-          {{getHairCutEmployName}}
-        </el-form-item>
-        <!--<el-form-item label="理发师手机" prop="cutHairEmployMobile">-->
-        <!--<el-input  v-model="employ.cutHairEmployMobile" placeholder="请输入理发师手机"></el-input>-->
-        <!--</el-form-item>-->
-        <el-form-item label="客户图片：" prop="img">
-          <img v-for="item in employ.img" :src="item" alt="暂无图片" style="width: 100px;height: 100px;margin-left: 10px">
-        </el-form-item>
-        <el-form-item label="剪发费用：" prop="cutHairPrice">
-          {{employ.cutHairPrice}}
-        </el-form-item>
-        <el-form-item label="备注信息：" prop="remark">
-          {{employ.remark}}
+        <el-row>
+          <el-col :span="12">
+            <el-form-item class="form-item-wrap" label="剪发费用：" prop="cutHairPrice">
+              {{form.cutHairPrice | amountFmt}}
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item class="form-item-wrap" label="操作：" prop="cutHairPrice">
+              <a style="color: #409EFF" @click="onToEditCustom(form.id)">编辑</a>
+              <a style="color: red" @click="deleteCustom(form.id)">删除</a>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item class="form-item-wrap" label="备注信息：" prop="remark">
+          {{form.remark}}
         </el-form-item>
       </el-form>
     </ContentView>
+    <el-dialog
+      title="图片查看"
+      :visible.sync="dialogVisible"
+      width="90%"
+      :before-close="handleClose">
+      <img :src="curImgUrl" alt="暂无图片" style="width: 100%;height: 300px">
+    </el-dialog>
   </div>
 </template>
 
@@ -59,6 +91,8 @@
         type: '',
         shops: [],
         employs: [],
+        dialogVisible: false,
+        curImgUrl: '',
         employ: {
           name: '',
           mobile: '',
@@ -75,12 +109,20 @@
       }
     },
     methods: {
+      handleClose(done) {
+        done()
+      },
+      onImgCheck: function (imgUrl) {
+        this.dialogVisible = true
+        this.curImgUrl = imgUrl
+      },
       getEmployList: function () {
         HttpClient.get('/employ/employList').then((resp) => {
           this.employs = resp.data
+          this.getCustomDtl()
         })
       },
-      deleteCustom() {
+      deleteCustom(id) {
         this.$confirm('此操作将永久删除该客户, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -90,11 +132,11 @@
           let qs = require('qs')
           HttpClient.post('/custom/delete', qs.stringify(
             {
-              mobile: this.$route.query.mobile
+              id: id
             })).then((resp) => {
             if (resp.success) {
               this.$message.success(resp.message)
-              this.$router.replace({name:'employList'})
+              this.getCustomDtl()
             }
           }).catch((error) => {
             this.$message.error(error.message)
@@ -105,65 +147,54 @@
       getCustomDtl() {
         HttpClient.get(`/custom/dtl?mobile=${this.$route.query.mobile}`).then((resp) => {
           if (resp.success) {
-            this.employ = resp.data[0]
-            this.employ.img = this.employ.hairImg.split(',')
+            this.employ = resp.data
+            this.employ.forEach(item => {
+              item.img = item.hairImg.split(',')
+              if (item.introduceEmployMobile === 'none') {
+                item.introduceEmployMobile = '无'
+              } else {
+                this.employs.forEach(employ => {
+                  if (employ.mobile === item.introduceEmployMobile) {
+                    item.introduceEmployMobile = employ.name
+                  }
+                })
+              }
+              if (item.cutHairEmployMobile === 'none') {
+                item.cutHairEmployMobile = '无'
+              } else {
+                this.employs.forEach(employ => {
+                  if (employ.mobile === item.cutHairEmployMobile) {
+                    item.cutHairEmployMobile = employ.name
+                  }
+                })
+              }
+            })
+
           }
         }).catch(error => {
           this.$message.error(error.message)
         })
       },
-      onToEditCustom: function(formName) {
-        this.$router.push({name: 'customAdd', query: {type: 'edit', mobile: this.$route.query.mobile}})
+      onToEditCustom: function(id) {
+        this.$router.push({name: 'customAdd', query: {type: 'edit', id:id}})
       }
     },
     mounted: function () {
-      this.getCustomDtl()
       this.getEmployList()
-    },
-    computed: {
-      getIntroduceEmployName: function() {
-        if (this.employ.introduceEmployMobile === 'none') {
-          return '无'
-        }
-        let name = ''
-        for(let i = 0; i< this.employs.length;i++) {
-          if (this.employs[i].mobile === this.employ.introduceEmployMobile) {
-            name = this.employs[i].name
-            break;
-          }
-        }
-        if (name) {
-          return name
-        } else {
-          return '无'
-        }
-      },
-      getHairCutEmployName : function() {
-        if (this.employ.cutHairEmployMobile === 'none') {
-          return '无'
-        }
-        let name = ''
-        for(let i = 0; i< this.employs.length;i++) {
-          if (this.employs[i].mobile === this.employ.cutHairEmployMobile) {
-            name = this.employs[i].name
-            break;
-          }
-        }
-        if (name) {
-          return name
-        } else {
-          return '无'
-        }
-      }
     }
   }
 </script>
 
 <style>
+  .form-item-wrap{
+    margin-bottom: 0;
+    line-height: 20px;
+  }
   .widthClass{
     width: 315px;
   }
   .employ{
     margin: 10px;
+    background: #eee;
   }
 </style>

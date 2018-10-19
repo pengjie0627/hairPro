@@ -6,7 +6,7 @@
       </template>
     </HeaderView>
     <ContentView>
-      <el-form :model="employ" :rules="rules" ref="employ" label-width="100px" class="employ">
+      <el-form :model="employ" :rules="rules" ref="employ" label-width="100px" class="custom">
         <el-form-item label="客户姓名" prop="name">
           <el-input v-model="employ.name" placeholder="请输入员工姓名"></el-input>
         </el-form-item>
@@ -49,6 +49,7 @@
           <el-input type="textarea" v-model="employ.remark" placeholder="请输入对员工的备注信息"></el-input>
         </el-form-item>
       </el-form>
+      <div class="btn-bottom-wrap"><el-button class="btn-bottom" type="primary" @click="onSaveAndAdd('employ')">保存并新增</el-button></div>
     </ContentView>
   </div>
 </template>
@@ -146,13 +147,14 @@
               this.$message.error('请上传图片')
               return
             }
-            let url = this.type === 'add' ? '/custom/add' : '/custom/edit'
-            if (this.type === 'edit') {
+            let url = this.type === 'edit' ? '/custom/edit' : '/custom/add'
+            if (this.type === 'edit' || this.type === 'saveAndAdd') {
               Array.prototype.push.apply(this.employ.img,this.copyImg)
             }
             let qs = require('qs')
             HttpClient.post(url, qs.stringify(
               {
+                id: this.$route.query.id,
                 name: this.employ.name,
                 mobile: this.employ.mobile,
                 hairTime: DataFormat.formatDate(this.employ.hairTime, 'yyyy-MM-dd'),
@@ -176,8 +178,12 @@
           }
         });
       },
+      onSaveAndAdd(formName) {
+        this.type = 'saveAndAdd'
+        this.onToSaveEmploy(formName)
+      },
       getEmployDtl() {
-        HttpClient.get(`/custom/dtl?mobile=${this.$route.query.mobile}`).then((resp) => {
+        HttpClient.get(`/custom/dtlById?id=${this.$route.query.id}`).then((resp) => {
           if (resp.success) {
             this.employ = resp.data[0]
             this.employ.hairTime = new Date(this.employ.hairTime)
@@ -209,7 +215,14 @@
 </script>
 
 <style scoped>
-  .employ{
+  .custom{
     margin: 10px;
+  }
+  .btn-bottom-wrap{
+    text-align: center;
+    padding: 20px 0;
+  }
+  .btn-bottom{
+    width: 90%;
   }
 </style>

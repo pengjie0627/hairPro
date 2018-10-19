@@ -44,7 +44,7 @@ var table = {
     custom: `CREATE TABLE custom(
         id SMALLINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
         name VARCHAR(20) NOT NULL,
-        mobile VARCHAR(11) UNIQUE NOT NULL,
+        mobile VARCHAR(11) NOT NULL,
         remark VARCHAR(255) NOT NULL,
         hairTime VARCHAR(15) NOT NULL,
         hairImg VARCHAR(500) NOT NULL,

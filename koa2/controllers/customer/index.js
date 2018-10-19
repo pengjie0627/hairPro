@@ -1,6 +1,6 @@
 const Db = require('../../mysql/utils.js')
 var fn_customList = async (ctx) => {
-    let customList = await Db.query(`select * from custom`)
+    let customList = await Db.query(`select * from  custom order by hairTime desc`)
     let body = require('../../dao/baseResponse.js')
     body.message = ''
     body.total = customList.length
@@ -10,6 +10,7 @@ var fn_customList = async (ctx) => {
 }
 var fn_customEdit = async (ctx) => {
     let custom = {
+        id: ctx.request.body.id,
         name: ctx.request.body.name,
         mobile: ctx.request.body.mobile,
         hairTime: ctx.request.body.hairTime,
@@ -29,9 +30,9 @@ var fn_customEdit = async (ctx) => {
         hairImg = '${custom.img}',
         cutHairPrice = ${custom.cutHairPrice},
         remark = '${custom.remark}'
-        where mobile = '${custom.mobile}'
+        where id = '${custom.id}'
     `)
-    let customList = await Db.query(`select * from custom where mobile = '${custom.mobile}'`)
+    let customList = await Db.query(`select * from custom where id = '${custom.id}'`)
     let body = require('../../dao/baseResponse.js')
     body.message = '编辑客户成功'
     body.total = customList.length
@@ -93,7 +94,7 @@ var fn_customAdd = async (ctx) => {
     }
 }
 var fn_customDtl = async (ctx) => {
-    let customList = await Db.query(`select * from custom where mobile = ${ctx.request.query.mobile}`)
+    let customList = await Db.query(`select * from custom where mobile = ${ctx.request.query.mobile} order by hairTime desc`)
     let body = require('../../dao/baseResponse.js')
     body.message = ''
     body.total = customList.length
@@ -101,10 +102,33 @@ var fn_customDtl = async (ctx) => {
     body.data = customList
     ctx.response.body = body
 }
+var fn_customDelete = async (ctx) => {
+    await Db.delete(`delete from custom where id = '${ctx.request.body.id}'`)
+    let body = require('../../dao/baseResponse.js')
+    body.message = '删除成功'
+    body.total = 0
+    body.success = true
+    body.data = []
+    ctx.response.body = body
+}
+var fn_customDtlById = async (ctx) => {
+    let customList = await Db.query(`select * from custom where id = ${ctx.request.query.id}`)
+    let body = require('../../dao/baseResponse.js')
+    body.message = ''
+    body.total = customList.length
+    body.success = true
+    body.data = customList
+    ctx.response.body = body
+}
+var fn_editAndSave = async (ctx) =>{
+    fn_customAdd(ctx)
+}
 module.exports = {
     'GET /custom/customList': fn_customList,
     'GET /custom/dtl': fn_customDtl,
+    'GET /custom/dtlById': fn_customDtlById,
     'POST /custom/add': fn_customAdd,
     'POST /custom/edit': fn_customEdit,
-    // 'POST /employ/delete': fn_employDelete
+    'POST /custom/editAndSave': fn_editAndSave,
+    'POST /custom/delete': fn_customDelete
 }
