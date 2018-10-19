@@ -113,9 +113,6 @@
           bankCard: [
             { max: 50,required: true, message: '请输入银行卡号码', trigger: 'blur' }
           ],
-          img: [
-            { type:'array', required: true, message: '请上传员工图片', trigger: 'change' }
-          ],
           salary: [
             { max: 20,required: true, message: '请输入员工工资', trigger: 'blur' }
           ],
@@ -146,6 +143,10 @@
         // this.$router.push({name: 'employAdd', query: {type: 'add'}})
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            if (this.employ.img.length === 0 && this.copyImg.length === 0) {
+              this.$message.error('请上传图片')
+              return
+            }
             let url = this.type === 'add' ? '/employ/add' : '/employ/edit'
             if (this.type === 'edit') {
               Array.prototype.push.apply(this.employ.img,this.copyImg)
@@ -192,6 +193,7 @@
             this.employ.customCheckedAuth = !!this.employ.customCheckedAuth,
             this.employ.otherEmployCheckAuth = !!this.employ.otherEmployCheckAuth
             this.copyImg = this.employ.img = resp.data[0].img.split(',')
+            this.employ.img = []
           }
         }).catch(error => {
           this.$message.error(error.message)

@@ -13,6 +13,9 @@ import ShopReport from '@/components/shop/ShopReport.vue'
 import EmployList from '@/components/employ/EmployList.vue'
 import EmployAdd from '@/components/employ/EmployAdd.vue'
 import EmployDtl from '@/components/employ/EmployDtl.vue'
+import CustomList from '@/components/customer/CustomList.vue'
+import CustomAdd from '@/components/customer/CustomAdd.vue'
+import CustomDtl from '@/components/customer/CustomDtl.vue'
 Vue.use(Router)
 
 const router = new Router({
@@ -81,6 +84,21 @@ const router = new Router({
           path: '/employDtl',
           name: 'employDtl',
           component: EmployDtl
+        },
+        {
+          path: '/customList',
+          name: 'customList',
+          component: CustomList
+        },
+        {
+          path: '/customAdd',
+          name: 'customAdd',
+          component: CustomAdd
+        },
+        {
+          path: '/customDtl',
+          name: 'customDtl',
+          component: CustomDtl
         }
       ]
     }

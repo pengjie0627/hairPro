@@ -49,9 +49,7 @@ var table = {
         hairTime VARCHAR(15) NOT NULL,
         hairImg VARCHAR(500) NOT NULL,
         vipLevel VARCHAR(50) NOT NULL,
-        introduceEmployName VARCHAR(20) NOT NULL,
-        introduceEmployMobile VARCHAR(20) NOT NULL,
-        cutHairEmployName VARCHAR(20) NOT NULL,
+        introduceEmployMobile VARCHAR(20),
         cutHairEmployMobile VARCHAR(20) NOT NULL,
         cutHairPrice DECIMAL(10,2) NOT NULL
     )`

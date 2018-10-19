@@ -92,7 +92,7 @@ var fn_employEdit = async (ctx) => {
     } else {
         curMobile = employ.oldMobile
     }
-    await Db.add(`update 
+    let addEmploy = await Db.add(`update 
     employ set
     name = '${employ.name}',
     mobile = '${employ.mobile}',
@@ -109,13 +109,22 @@ var fn_employEdit = async (ctx) => {
     loginAuth = ${parseInt(employ.loginAuth)},
     customCheckedAuth = ${parseInt(employ.customCheckedAuth)},
     otherEmployCheckAuth = ${parseInt(employ.otherEmployCheckAuth)} where mobile = '${curMobile}'`)
-    let curEmploy = await Db.query(`select * from employ where mobile = '${employ.mobile}'`)
-    let body = require('../../dao/baseResponse.js')
-    body.message = '员工创建成功'
-    body.total = 0
-    body.success = true
-    body.data = curEmploy
-    ctx.response.body = body
+    if (addEmploy.msg) {
+        let body = require('../../dao/baseResponse.js')
+        body.message = '员工手机号码重复'
+        body.total = 0
+        body.success = false
+        body.data = []
+        ctx.response.body = body
+    } else {
+        let curEmploy = await Db.query(`select * from employ where mobile = '${employ.mobile}'`)
+        let body = require('../../dao/baseResponse.js')
+        body.message = '员工创建成功'
+        body.total = 0
+        body.success = true
+        body.data = curEmploy
+        ctx.response.body = body
+    }
 }
 var fn_employDtl = async (ctx) => {
     let curEmploy = await Db.query(`select * from employ where mobile = '${ctx.request.query.mobile}'`)

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderView title="员工管理" :isShowBack="false">
+    <HeaderView title="员工列表" :isShowBack="false">
       <template slot="left">
         <span @click="onToSelectRole">返回</span>
       </template>

@@ -31,7 +31,8 @@ module.exports = {
       'mgr': resolve('src/mgr'),
       'static': resolve('static'),
       'filter': resolve('src/filter'),
-      'directive': resolve('src/directive')
+      'directive': resolve('src/directive'),
+      'utils': resolve('src/utils')
     }
   },
   module: {

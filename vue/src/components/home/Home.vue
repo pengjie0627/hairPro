@@ -50,10 +50,10 @@
             this.$router.push('employList')
             break
           case 2:
-            this.$router.push('shopList')
+            this.$router.push('customList')
             break
           case 3:
-            this.$router.push('shopList')
+            this.$router.push('settingList')
             break
         }
       }
