@@ -53,6 +53,10 @@ var table = {
         cutHairEmployMobile VARCHAR(20) NOT NULL,
         cutHairPrice DECIMAL(10,2) NOT NULL,
         belongShopId VARCHAR(11) NOT NULL
+    )`,
+    advisement: `CREATE TABLE advisement(
+        id SMALLINT UNSIGNED PRIMARY KEY AUTO_INCREMENT, 
+        adImg VARCHAR(100) NOT NULL
     )`
 }
 module.exports = table

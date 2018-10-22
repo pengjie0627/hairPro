@@ -51,6 +51,9 @@ app.use(KoaStatic(
 app.use(KoaStatic(
     path.join(__dirname, './img/otherImg')
 ))
+app.use(KoaStatic(
+    path.join(__dirname, './img/advise')
+))
 // 接口上传json数据解析
 app.use(koaBody({
     multipart: true,

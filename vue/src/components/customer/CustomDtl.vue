@@ -8,28 +8,23 @@
     <ContentView>
       <el-form v-for="form in employ"  ref="employ" label-width="100px" class="custom-dtl">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item class="form-item-wrap" label="客户姓名：" prop="name">
-              {{form.name}}
+              {{form.name}}【{{form.vipLevel === 'none' ? '非会员' : '会员'}}】
             </el-form-item>
           </el-col>
           <!--<el-col :span="12"><el-button type="danger" size="mini" @click="deleteCustom">删除该员工</el-button></el-col>-->
-          <el-col :span="12">
-            <el-form-item class="form-item-wrap" label="客户手机：" prop="mobile">
-              {{form.mobile}}
-            </el-form-item>
-          </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="14">
             <el-form-item class="form-item-wrap" prop="hairTime" label="剪发日期：">
               {{form.hairTime}}
             </el-form-item>
           </el-col>
           <!--<el-col :span="12"><el-button type="danger" size="mini" @click="deleteCustom">删除该员工</el-button></el-col>-->
-          <el-col :span="12">
-            <el-form-item class="form-item-wrap" label="是否是vip：" prop="vipLevel">
-              {{form.vipLevel}}
+          <el-col :span="10">
+            <el-form-item class="form-item-wrap" label="剪发费用：" prop="cutHairPrice">
+              {{form.cutHairPrice | amountFmt}}
             </el-form-item>
           </el-col>
         </el-row>
@@ -46,13 +41,10 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item class="form-item-wrap" label="客户图片：" prop="img">
-          <img v-for="item in form.img" :src="item" @click="onImgCheck(item)" alt="暂无图片" style="width: 60px;height: 60px;margin-left: 10px">
-        </el-form-item>
         <el-row>
           <el-col :span="12">
-            <el-form-item class="form-item-wrap" label="剪发费用：" prop="cutHairPrice">
-              {{form.cutHairPrice | amountFmt}}
+            <el-form-item class="form-item-wrap" label="客户手机：" prop="mobile">
+              {{form.mobile}}
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -64,6 +56,9 @@
         </el-row>
         <el-form-item class="form-item-wrap" label="备注信息：" prop="remark">
           {{form.remark}}
+        </el-form-item>
+        <el-form-item class="form-item-wrap" label="客户图片：" prop="img">
+          <img v-for="item in form.img" :src="item" @click="onImgCheck(item)" alt="暂无图片" style="width: 60px;height: 60px;margin-left: 10px">
         </el-form-item>
       </el-form>
     </ContentView>

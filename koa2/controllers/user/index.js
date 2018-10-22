@@ -40,6 +40,20 @@ var fn_login = async(ctx, next) => {
     } else { // 表存在
         console.log('顾客表存在')
     }
+    // 广告表检查
+    let adviseTable = await db.query('show tables like "advisement"')
+    if (adviseTable.length === 0) {// 表不存在
+        console.log('广告表不存在,正在创建')
+        await db.createTable(require('../../mysql/table').advisement)
+    } else { // 表存在
+        console.log('广告表存在')
+    }
+    await db.delete(`delete from advisement`)
+    await db.add(`insert into advisement(adImg) values(
+    '${ctx.request.protocol}://${ctx.request.header.host}/ad1.jpg'),
+    ('${ctx.request.protocol}://${ctx.request.header.host}/ad2.jpg'),
+    ('${ctx.request.protocol}://${ctx.request.header.host}/ad3.jpg'),
+    ('${ctx.request.protocol}://${ctx.request.header.host}/ad4.jpg')`)
     // 每次先删除触发器在新建，因为触发器不能重复
     await db.delete(`DROP TRIGGER IF EXISTS delEmployByShop`)
     // 删除门店自动删除门店对应的员工的触发器
@@ -114,6 +128,14 @@ var fn_register = async(ctx, next) => {
         await db.createTable(require('../../mysql/table').custom)
     } else { // 表存在
         console.log('顾客表存在')
+    }
+    // 广告表检查
+    let adviseTable = await db.query('show tables like "advisement"')
+    if (adviseTable.length === 0) {// 表不存在
+        console.log('广告表不存在,正在创建')
+        await db.createTable(require('../../mysql/table').advisement)
+    } else { // 表存在
+        console.log('广告表存在')
     }
     // 获取数据库表admin信息
     let result = await db.add(`insert into user(userName,userPassword,userType) values('${loginName}','${loginPassword}','admin')`)// 引号一定需要

@@ -9,6 +9,11 @@
       </template>
     </HeaderView>
     <ContentView>
+      <el-carousel indicator-position="outside">
+        <el-carousel-item v-for="(img, index) in adImgs" :key="index">
+          <img :src="img.adImg" alt="暂无图片" style="width: 100%;height: 100%">
+        </el-carousel-item>
+      </el-carousel>
       <el-table
         :data="shops"
         style="width: 100%">
@@ -56,13 +61,25 @@
     },
     data() {
       return {
-        shops: []
+        shops: [],
+        adImgs: []
       }
     },
     mounted: function () {
+      this.adImgs = []
       this.getShopList()
+      this.getAdImg()
     },
     methods: {
+      getAdImg() {
+        HttpClient.get('/advisement/advisementList').then(resp => {
+          if (resp.success) {
+            this.adImgs = resp.data
+          }
+        }).catch(error => {
+          this.$message.error(error.message)
+        })
+      },
       getShopList() {
         HttpClient.get(`/shop/shopList?mobile=${this.$store.state.user.user.mobile}`).then((resp) => {
           if (resp.success) {
@@ -90,8 +107,26 @@
   }
 </script>
 
-<style scoped>
+<style>
 .name{
   color: #409EFF;
+}
+.el-carousel__container{
+  height: 200px;
+}
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 14px;
+  opacity: 0.75;
+  line-height: 200px;
+  margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n+1) {
+  background-color: #d3dce6;
 }
 </style>
