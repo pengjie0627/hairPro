@@ -16,6 +16,11 @@
         <el-form-item prop="hairTime" label="剪发日期">
           <el-date-picker type="date" placeholder="选择剪发日期" v-model="employ.hairTime" style="width: 100%;"></el-date-picker>
         </el-form-item>
+        <el-form-item label="所属门店" prop="belongShopId">
+          <el-select v-model="employ.belongShopId" placeholder="请选择门店" style="width: 100%">
+            <el-option v-for="shop in shops" :label="shop.shopName" :value="shop.shopUuid">{{shop.shopName}}</el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="是否是vip" prop="vipLevel">
           <el-select v-model="employ.vipLevel" placeholder="请选择门店" style="width: 100%">
             <el-option label="无" value="none">无</el-option>
@@ -49,7 +54,7 @@
           <el-input type="textarea" v-model="employ.remark" placeholder="请输入对员工的备注信息"></el-input>
         </el-form-item>
       </el-form>
-      <div class="btn-bottom-wrap"><el-button class="btn-bottom" type="primary" @click="onSaveAndAdd('employ')">保存并新增</el-button></div>
+      <div class="btn-bottom-wrap" v-if="type === 'edit'"><el-button class="btn-bottom" type="primary" @click="onSaveAndAdd('employ')">保存并新增</el-button></div>
     </ContentView>
   </div>
 </template>
@@ -72,6 +77,7 @@
         type: '',
         copyImg: [],
         employs: [],
+        shops: [],
         employ: {
           name: '',
           mobile: '',
@@ -83,7 +89,8 @@
           cutHairEmployMobile: '',
           img: [],
           cutHairPrice: 0,
-          remark: ''
+          remark: '',
+          belongShopId: ''
         },
         rules: {
           name: [
@@ -101,6 +108,9 @@
           ],
           introduceEmployName: [
             { max: 20,required: true, message: '请输入介绍人名称', trigger: 'change' }
+          ],
+          belongShopId: [
+            { max: 11,required: true, message: '请选择门店', trigger: 'change' }
           ],
           // introduceEmployMobile: [
           //   { min: 11,max: 11,required: true, message: '请输入11位手机号码', trigger: 'blur' }
@@ -166,7 +176,8 @@
                 cutHairEmployMobile: this.employ.cutHairEmployName,
                 img: this.employ.img,
                 cutHairPrice:this.employ.cutHairPrice,
-                remark: this.employ.remark
+                remark: this.employ.remark,
+                belongShopId: this.employ.belongShopId
               })).then((resp) => {
               if (resp.success) {
                 this.$message.success(resp.message)
@@ -184,6 +195,16 @@
       onSaveAndAdd(formName) {
         this.type = 'saveAndAdd'
         this.onToSaveEmploy(formName)
+      },
+      getShopList() {
+        HttpClient.get(`/shop/shopList?mobile=${this.$store.state.user.user.mobile}`).then((resp) => {
+          if (resp.success) {
+            this.shops = resp.data
+            console.log(resp.data)
+          }
+        }).catch(error => {
+          this.$message.error(error.message)
+        })
       },
       getEmployDtl() {
         HttpClient.get(`/custom/dtlById?id=${this.$route.query.id}`).then((resp) => {
@@ -213,6 +234,7 @@
       this.type = this.$route.query.type
       this.title = this.type === 'add' ? '新增客户' : '编辑客户'
       this.getEmployList()
+      this.getShopList()
     }
   }
 </script>

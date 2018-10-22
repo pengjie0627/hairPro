@@ -5,22 +5,22 @@
         <!---->
       <!--</ContentView>-->
       <div :style="{height: height,overflow: 'auto'}">
-        <el-tabs type="border-card">
-          <el-tab-pane label="今天">
+        <el-tabs type="border-card" v-model="activeName">
+          <el-tab-pane label="今天" name="tab1">
             <div style="width: 300px;height: 300px;margin: 0 auto"  ref="myEchart1"></div>
-            <div class="sum">合计总额：20000.00元</div>
+            <div class="sum">合计总额：{{getSumAmount | amountFmt}}元</div>
           </el-tab-pane>
-          <el-tab-pane label="本周">
+          <el-tab-pane label="本周" name="tab2">
             <div style="width: 300px;height: 300px;margin: 0 auto"  ref="myEchart2"></div>
-            <div class="sum">合计总额：20000.00元</div>
+            <div class="sum">合计总额：{{getSumAmount | amountFmt}}元</div>
           </el-tab-pane>
-          <el-tab-pane label="本月">
+          <el-tab-pane label="本月" name="tab3">
             <div style="width: 300px;height: 300px;margin: 0 auto"  ref="myEchart3"></div>
-            <div class="sum">合计总额：20000.00元</div>
+            <div class="sum">合计总额：{{getSumAmount | amountFmt}}元</div>
           </el-tab-pane>
-          <el-tab-pane label="本年">
+          <el-tab-pane label="本年" name="tab4">
             <div style="width: 300px;height: 300px;margin: 0 auto"  ref="myEchart4"></div>
-            <div class="sum">合计总额：20000.00元</div>
+            <div class="sum">合计总额：{{getSumAmount | amountFmt}}元</div>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -31,6 +31,7 @@
   import HeaderView from '@/components/cmp/HeaderView.vue'
   import ContentView from '@/components/cmp/contentView.vue'
   import echarts from 'echarts'
+  import HttpClient from 'http/httpClient.js'
   export default {
     components: {
       HeaderView,
@@ -39,11 +40,40 @@
     data() {
       return {
         chart: null,
-        height: ''
+        height: '',
+        activeName: 'tab1',
+        customArray: []
+      }
+    },
+    watch: {
+      activeName(newVal, oldVa) {
+        let oDate = ''
+        if (newVal === 'tab1') {
+          oDate = 'today'
+          this.getAmountByDate(oDate, this.chart1)
+        } else if(newVal === 'tab2') {
+          oDate = 'week'
+          this.getAmountByDate(oDate, this.chart2)
+        } else if(newVal === 'tab3') {
+          oDate = 'month'
+          this.getAmountByDate(oDate, this.chart3)
+        } else {
+          oDate = 'year'
+          this.getAmountByDate(oDate, this.chart4)
+        }
       }
     },
     created: function() {
       this.height = document.documentElement.clientHeight - 100 + 'px'
+    },
+    computed: {
+      getSumAmount() {
+        let oSum = 0
+        this.customArray.forEach(item => {
+          oSum += item.amount
+        })
+        return oSum
+      }
     },
     methods: {
       initChart(chart, xData, yData) {
@@ -63,7 +93,7 @@
           },
           xAxis: [{
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            data: xData,
             axisTick: {
               alignWithLabel: true
             }
@@ -72,11 +102,29 @@
             type: 'value'
           }],
           series: [{
-            name: '直接访问',
+            name: '金额',
             type: 'bar',
             barWidth: '60%',
-            data: [10, 52, 200, 334, 390, 330, 220]
+            data: yData
           }]
+        })
+      },
+      getAmountByDate(date, chart) {
+        HttpClient.get(`/shop/reportAmount?shopUuid=${this.$route.query.uuid}&date=${date}`).then(resp => {
+          if (resp.success) {
+            this.customArray = resp.data
+            if (resp.data && resp.data.length > 0) {
+              let oX = []
+              let oY = []
+              resp.data.forEach(item => {
+                oX.push(item.hairTime)
+                oY.push(item.amount)
+              })
+              this.initChart(chart, oX, oY)
+            }
+          }
+        }).catch(error => {
+          this.$message.error(error.message)
         })
       }
     },
@@ -86,10 +134,8 @@
       this.chart2 = echarts.init(this.$refs.myEchart2);
       this.chart3 = echarts.init(this.$refs.myEchart3);
       this.chart4 = echarts.init(this.$refs.myEchart4);
-      this.initChart(this.chart1, [], [])
-      this.initChart(this.chart2, [], [])
-      this.initChart(this.chart3, [], [])
-      this.initChart(this.chart4, [], [])
+
+      this.getAmountByDate('today', this.chart1)
       window.onresize = function () {
         that.height = document.documentElement.clientHeight - 100 + 'px'
       }

@@ -51,7 +51,8 @@ var table = {
         vipLevel VARCHAR(50) NOT NULL,
         introduceEmployMobile VARCHAR(20),
         cutHairEmployMobile VARCHAR(20) NOT NULL,
-        cutHairPrice DECIMAL(10,2) NOT NULL
+        cutHairPrice DECIMAL(10,2) NOT NULL,
+        belongShopId VARCHAR(11) NOT NULL
     )`
 }
 module.exports = table

@@ -66,7 +66,9 @@ var operator = {
             connect.query(sql, (err, result) => {
                 if (err) {
                     console.log('数据库删除错误:' + err.message);
-                    reject(err)
+                    resolve({
+                        msg: err
+                    })
                 }
                 console.log('-------------删除成功----------');
                 resolve(result)

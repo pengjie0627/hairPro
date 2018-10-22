@@ -2,6 +2,7 @@ const db = require('../../mysql/utils');
 const database = require('../../mysql/database.js')
 const fs = require('fs')
 const path = require('path');
+const trigger = require('../../mysql/trigger.js')
 var fn_login = async(ctx, next) => {
     // 获取账号信息
     let loginName = ctx.request.query.userName
@@ -39,6 +40,11 @@ var fn_login = async(ctx, next) => {
     } else { // 表存在
         console.log('顾客表存在')
     }
+    // 每次先删除触发器在新建，因为触发器不能重复
+    await db.delete(`DROP TRIGGER IF EXISTS delEmployByShop`)
+    // 删除门店自动删除门店对应的员工的触发器
+    await db.delete(trigger.delEmployByShop)
+
     let adminArr = await db.query(`SELECT * FROM user WHERE userName = '${loginName}' AND userPassword = '${loginPassword}'`)// 引号一定需要
     if (adminArr.length > 0) {// 店长
         let cookies = `${loginName}#${loginPassword}#${Math.random(20)}#${Math.random(20)}#${Math.random(20)}`

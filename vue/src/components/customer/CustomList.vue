@@ -27,7 +27,12 @@
         <el-table-column
           align="center"
           prop="hairTime"
-          label="最近剪发时间">
+          label="剪发时间">
+        </el-table-column>
+        <el-table-column
+          align="center"
+          prop="belongShopId"
+          label="所属门店">
         </el-table-column>
       </el-table>
     </ContentView>
@@ -57,11 +62,29 @@
       },
       getCustomList: function () {
         HttpClient.get('/custom/customList').then((resp) => {
-          this.employ = resp.data
+          this.getShopList(resp.data)
         })
       },
       onToEmployDtl: function(row) {
         this.$router.push({name: 'customDtl', query: {mobile: row.mobile}})
+      },
+      getShopList(data) {
+        HttpClient.get(`/shop/shopList?mobile=${this.$store.state.user.user.mobile}`).then((resp) => {
+          if (resp.success) {
+            this.employ = data
+            if (resp.data && resp.data.length > 0) {
+              for (let i=0;i<data.length;i++) {
+                for (let j=0;j<resp.data.length;j++) {
+                  if (data[i].belongShopId === resp.data[j].shopUuid) {
+                    this.employ[i].belongShopId = resp.data[j].shopName
+                  }
+                }
+              }
+            }
+          }
+        }).catch(error => {
+          this.$message.error(error.message)
+        })
       },
     },
     mounted: function () {

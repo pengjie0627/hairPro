@@ -62,7 +62,8 @@ var fn_customAdd = async (ctx) => {
         cutHairEmployMobile: ctx.request.body.cutHairEmployMobile,
         img: ctx.request.body.img,
         cutHairPrice:ctx.request.body.cutHairPrice,
-        remark: ctx.request.body.remark
+        remark: ctx.request.body.remark,
+        belongShopId: ctx.request.body.belongShopId
     }
     let addCustom = await Db.add(`insert into custom(
         name,
@@ -73,7 +74,8 @@ var fn_customAdd = async (ctx) => {
         cutHairEmployMobile,
         hairImg,
         cutHairPrice,
-        remark
+        remark,
+        belongShopId
         )
         values(
         '${custom.name}',
@@ -84,7 +86,8 @@ var fn_customAdd = async (ctx) => {
         '${custom.cutHairEmployMobile}',
         '${custom.img}',
         ${custom.cutHairPrice},
-        '${custom.remark}'
+        '${custom.remark}',
+        '${custom.belongShopId}'
         )
         `)
     let body = require('../../dao/baseResponse.js')

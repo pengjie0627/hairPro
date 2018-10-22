@@ -79,10 +79,57 @@ var fn_shopDelete = async function(ctx) {
     body.data = ''
     ctx.response.body = body
 }
+var fn_reportAmount = async function(ctx) {
+    let date = ctx.request.query.date
+    let shopUuid = ctx.request.query.shopUuid
+    let amountArray = ''
+    let body = require('../../dao/baseResponse.js')
+    let dateFormat = require('../../utils/dataFormat.js')
+    let startDate = '', endDate = ''
+    if (date === "today") {
+        startDate = dateFormat(new Date(), 'yyyy-MM-dd')
+        endDate = dateFormat(new Date(), 'yy-MM-dd')
+        amountArray = await Db.query(`select sum(cutHairPrice) as amount, hairTime from custom where belongShopId = '${shopUuid}' and hairTime = '${startDate}'`)
+        body.success = true
+        body.data = amountArray
+        ctx.response.body = body
+    } else if (date === 'week') {
+        let weekFormat = require('../../utils/getEveryDayByweek.js')
+        var d = weekFormat.getMonDate();
+        var arr=[];
+        for(var i=0; i<7; i++)
+        {
+            arr.push(d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate());
+            d.setDate(d.getDate()+1);
+        }
+        startDate = arr[0]
+        endDate = arr[arr.length-1]
+        amountArray = await Db.query(`select sum(cutHairPrice) as amount, hairTime from custom where belongShopId = '${shopUuid}' and hairTime between '${startDate}' and '${endDate}' group by hairTime order by hairTime asc`)
+        body.success = true
+        body.data = amountArray
+        ctx.response.body = body
+    } else if (date === 'month') {
+        let weekFormat = require('../../utils/getEveryDayByweek.js')
+        startDate = dateFormat(weekFormat.getCurrentMonthFirst(), 'yyyy-MM-dd')
+        endDate = dateFormat(weekFormat.getCurrentMonthLast(), 'yyyy-MM-dd')
+        amountArray = await Db.query(`select sum(cutHairPrice) as amount, hairTime from custom where belongShopId = '${shopUuid}' and hairTime between '${startDate}' and '${endDate}' group by hairTime order by hairTime asc`)
+        body.success = true
+        body.data = amountArray
+        ctx.response.body = body
+    } else {
+        startDate = new Date().getFullYear() + '-01-01'
+        endDate = new Date().getFullYear() + '-12-31'
+        amountArray = await Db.query(`select sum(cutHairPrice) as amount, hairTime from custom where belongShopId = '${shopUuid}' and hairTime between '${startDate}' and '${endDate}' group by hairTime order by hairTime asc`)
+        body.success = true
+        body.data = amountArray
+        ctx.response.body = body
+    }
+}
 module.exports = {
     'POST /shop/shopAdd': fn_shopAdd,
     'POST /shop/shopEdit': fn_shopEdit,
     'POST /shop/shopDelete': fn_shopDelete,
     'GET /shop/shopList': fn_shopList,
-    'GET /shop/shopDtl': fn_shopDtl
+    'GET /shop/shopDtl': fn_shopDtl,
+    'GET /shop/reportAmount': fn_reportAmount
 };

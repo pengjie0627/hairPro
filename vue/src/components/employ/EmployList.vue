@@ -32,6 +32,14 @@
             {{scope.row.salary | amountFmt}}
           </template>
         </el-table-column>
+        <el-table-column
+          align="center"
+          prop="salary"
+          label="所属门店">
+          <template slot-scope="scope">
+            {{scope.row.belongShopId}}
+          </template>
+        </el-table-column>
       </el-table>
     </ContentView>
   </div>
@@ -48,7 +56,8 @@
     },
     data() {
       return {
-        employ: []
+        employ: [],
+        shops: []
       }
     },
     methods: {
@@ -60,11 +69,29 @@
       },
       getEmployList: function () {
         HttpClient.get('/employ/employList').then((resp) => {
-          this.employ = resp.data
+          this.getShopList(resp.data)
         })
       },
       onToEmployDtl: function(row) {
         this.$router.push({name: 'employDtl', query: {mobile: row.mobile}})
+      },
+      getShopList(data) {
+        HttpClient.get(`/shop/shopList?mobile=${this.$store.state.user.user.mobile}`).then((resp) => {
+          if (resp.success) {
+            this.employ = data
+            if (resp.data && resp.data.length > 0) {
+              for (let i=0;i<data.length;i++) {
+                for (let j=0;j<resp.data.length;j++) {
+                  if (data[i].belongShopId === resp.data[j].shopUuid) {
+                    this.employ[i].belongShopId = resp.data[j].shopName
+                  }
+                }
+              }
+            }
+          }
+        }).catch(error => {
+          this.$message.error(error.message)
+        })
       },
     },
     mounted: function () {
