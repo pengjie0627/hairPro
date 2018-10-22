@@ -136,10 +136,20 @@ var fn_customDtlById = async (ctx) => {
 var fn_editAndSave = async (ctx) =>{
     fn_customAdd(ctx)
 }
+var fn_customListBySearch = async (ctx) => {
+    let customList = await Db.query(`select * from custom where mobile like '${ctx.request.query.info}%' or name like '${ctx.request.query.info}%'`)
+    let body = require('../../dao/baseResponse.js')
+    body.message = ''
+    body.total = customList.length
+    body.success = true
+    body.data = customList
+    ctx.response.body = body
+}
 module.exports = {
     'GET /custom/customList': fn_customList,
     'GET /custom/dtl': fn_customDtl,
     'GET /custom/dtlById': fn_customDtlById,
+    'GET /custom/CustomListBySearch': fn_customListBySearch,
     'POST /custom/add': fn_customAdd,
     'POST /custom/edit': fn_customEdit,
     'POST /custom/editAndSave': fn_editAndSave,

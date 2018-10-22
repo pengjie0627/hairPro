@@ -8,21 +8,23 @@
         <el-tabs type="border-card" v-model="activeName">
           <el-tab-pane label="今天" name="tab1">
             <div style="width: 300px;height: 300px;margin: 0 auto"  ref="myEchart1"></div>
-            <div class="sum">合计总额：{{getSumAmount | amountFmt}}元</div>
+            <div class="sum">合计收入总额：{{getSumAmount | amountFmt}}元</div>
           </el-tab-pane>
           <el-tab-pane label="本周" name="tab2">
             <div style="width: 300px;height: 300px;margin: 0 auto"  ref="myEchart2"></div>
-            <div class="sum">合计总额：{{getSumAmount | amountFmt}}元</div>
+            <div class="sum">合计收入总额：{{getSumAmount | amountFmt}}元</div>
           </el-tab-pane>
           <el-tab-pane label="本月" name="tab3">
             <div style="width: 300px;height: 300px;margin: 0 auto"  ref="myEchart3"></div>
-            <div class="sum">合计总额：{{getSumAmount | amountFmt}}元</div>
+            <div class="sum">合计收入总额：{{getSumAmount | amountFmt}}元</div>
           </el-tab-pane>
           <el-tab-pane label="本年" name="tab4">
             <div style="width: 300px;height: 300px;margin: 0 auto"  ref="myEchart4"></div>
-            <div class="sum">合计总额：{{getSumAmount | amountFmt}}元</div>
+            <div class="sum">合计收入总额：{{getSumAmount | amountFmt}}元</div>
           </el-tab-pane>
         </el-tabs>
+        <div class="sum red">本月员工工资支出总额：<br>{{sumAmount | amountFmt}}元</div>
+        <div class="sum">本月纯利润（截止到目前）：<br>{{getLastAmount | amountFmt}}元</div>
       </div>
     </div>
 </template>
@@ -42,7 +44,8 @@
         chart: null,
         height: '',
         activeName: 'tab1',
-        customArray: []
+        customArray: [],
+        sumAmount: 0
       }
     },
     watch: {
@@ -73,6 +76,9 @@
           oSum += item.amount
         })
         return oSum
+      },
+      getLastAmount() {
+        return this.getSumAmount - this.sumAmount
       }
     },
     methods: {
@@ -126,6 +132,19 @@
         }).catch(error => {
           this.$message.error(error.message)
         })
+      },
+      getEmployAmount() {
+        HttpClient.get(`/employ/amount?shopUuid=${this.$route.query.uuid}`).then(resp => {
+          if (resp.success) {
+            if (!resp.data[0].sumAmount) {
+              this.sumAmount = 0
+            } else {
+              this.sumAmount = resp.data[0].sumAmount
+            }
+          }
+        }).catch(error => {
+          this.$message.error(error.message)
+        })
       }
     },
     mounted: function () {
@@ -134,7 +153,7 @@
       this.chart2 = echarts.init(this.$refs.myEchart2);
       this.chart3 = echarts.init(this.$refs.myEchart3);
       this.chart4 = echarts.init(this.$refs.myEchart4);
-
+      this.getEmployAmount()
       this.getAmountByDate('today', this.chart1)
       window.onresize = function () {
         that.height = document.documentElement.clientHeight - 100 + 'px'
@@ -153,9 +172,13 @@
 <style scoped>
 .sum{
   color: green;
+  background: white;
   font-size: 20px;
   font-weight: bold;
   margin-top: 20px;
   text-align: center;
 }
+  .red{
+    color: red;
+  }
 </style>

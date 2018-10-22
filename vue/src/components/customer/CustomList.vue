@@ -9,6 +9,7 @@
       </template>
     </HeaderView>
     <ContentView>
+      <SearchView @customList="onCustomList"></SearchView>
       <el-table
         :data="employ"
         style="width: 100%">
@@ -42,11 +43,13 @@
 <script>
   import HeaderView from '@/components/cmp/HeaderView.vue'
   import ContentView from '@/components/cmp/contentView.vue'
+  import SearchView from '@/components/cmp/SearchView.vue'
   import HttpClient from 'http/httpClient.js'
   export default {
     components: {
       HeaderView,
-      ContentView
+      ContentView,
+      SearchView
     },
     data() {
       return {
@@ -54,6 +57,9 @@
       }
     },
     methods: {
+      onCustomList: function(data) {
+        this.employ = data
+      },
       onToSelectRole: function () {
         this.$router.replace({name: 'selectRole'})
       },

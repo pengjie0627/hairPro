@@ -144,10 +144,18 @@ var fn_employDelete = async function(ctx) {
     body.data = ''
     ctx.response.body = body
 }
+var fn_amount = async function(ctx) {
+    let curAmount = await Db.query(`select sum(salary) as sumAmount from employ where belongShopId = '${ctx.request.query.shopUuid}'`)
+    let body = require('../../dao/baseResponse.js')
+    body.success = true
+    body.data = curAmount
+    ctx.response.body = body
+}
 module.exports = {
     'GET /employ/employList': fn_employList,
     'GET /employ/dtl': fn_employDtl,
     'POST /employ/add': fn_employAdd,
     'POST /employ/edit': fn_employEdit,
-    'POST /employ/delete': fn_employDelete
+    'POST /employ/delete': fn_employDelete,
+    'GET /employ/amount': fn_amount
 }
