@@ -67,7 +67,7 @@ var fn_login = async(ctx, next) => {
             response.data = {userName: loginName}
             response.success = true
             response.total = 0
-            ctx.session.userinfo = cookies;
+            ctx.session.userinfo = cookies;// 设置返回的cookies
             ctx.response.body = response
     } else {
         // 从员工表中查询
@@ -79,7 +79,7 @@ var fn_login = async(ctx, next) => {
             response.data = {userName: loginName}
             response.success = true
             response.total = 0
-            ctx.session.userinfo = cookies;
+            ctx.session.userinfo = cookies;// 设置返回的cookies
             ctx.response.body = response
         } else {
             console.log('登录失败')
