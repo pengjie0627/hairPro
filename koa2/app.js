@@ -48,7 +48,7 @@ app.use(cors({
  * cookies过期检查
  */
 app.use(async(ctx, next) => {
-    console.log(ctx.session.userinfo)
+    console.log('获取cookies=' + ctx.session.userinfo)
     if (!ctx.session.userinfo && ctx.request.url.indexOf('user/login') === -1) {
         let body = require('./dao/baseResponse.js')
         body.message = '登录已过期'
